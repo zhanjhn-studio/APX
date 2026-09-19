@@ -29,7 +29,7 @@
 # =====================================================================
 set -uo pipefail
 
-# ↓↓↓ 改成你的仓库地址（或用环境变量 APX_REPO=... 覆盖） ↓↓↓
+
 APX_REPO="${APX_REPO:-https://github.com/zhanjhn-studio/APX.git}"
 APX_BRANCH="${APX_BRANCH:-main}"
 APX_TARBALL="${APX_TARBALL:-}"
