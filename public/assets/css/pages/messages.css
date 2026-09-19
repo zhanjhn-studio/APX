@@ -1,0 +1,122 @@
+/* =====================================================================
+ * APX · Messages / chat
+ * ===================================================================== */
+.apx-chat { display: grid; grid-template-columns: 320px 1fr; gap: 18px; align-items: start; height: calc(100vh - 150px); }
+.apx-chat__list { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); overflow-y: auto; box-shadow: var(--shadow-1); }
+.apx-chat__item { display: flex; gap: 12px; padding: 13px 16px; border-bottom: 1px solid var(--border); cursor: pointer; transition: background var(--dur-fast); }
+.apx-chat__item:hover { background: var(--surface-2); }
+.apx-chat__item.is-active { background: var(--primary-soft); }
+.apx-chat__item .apx-avatar { flex: none; }
+.apx-chat__item-body { flex: 1; min-width: 0; }
+.apx-chat__item-name { font-weight: 600; color: var(--text-strong); display: flex; justify-content: space-between; gap: 8px; }
+.apx-chat__item-prev { color: var(--text-muted); font-size: var(--fs-sm); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.apx-chat__unread { background: var(--danger); color: #fff; font-size: 11px; min-width: 18px; height: 18px; border-radius: var(--r-pill); display: inline-flex; align-items: center; justify-content: center; padding: 0 5px; }
+
+.apx-thread { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); display: flex; flex-direction: column; box-shadow: var(--shadow-1); overflow: hidden; }
+.apx-thread__head { padding: 14px 18px; border-bottom: 1px solid var(--border); display: flex; align-items: center; gap: 12px; }
+.apx-thread__body { flex: 1; overflow-y: auto; padding: 18px; display: flex; flex-direction: column; gap: 12px; background: var(--bg-2); }
+.apx-thread__empty { margin: auto; color: var(--text-faint); text-align: center; }
+.apx-msg { display: flex; gap: 10px; max-width: 76%; }
+.apx-msg--me { align-self: flex-end; flex-direction: row-reverse; }
+.apx-msg__bubble { background: var(--surface-3); padding: 10px 14px; border-radius: 16px; border-top-left-radius: 4px; color: var(--text); line-height: 1.55; word-break: break-word; }
+.apx-msg--me .apx-msg__bubble { background: var(--primary-grad); color: #fff; border-radius: 16px; border-top-right-radius: 4px; }
+.apx-msg--recall .apx-msg__bubble { font-style: italic; opacity: 0.6; }
+.apx-msg__meta { font-size: 11px; color: var(--text-faint); margin-top: 4px; }
+.apx-msg__actions { display: none; gap: 6px; margin-top: 4px; }
+.apx-msg:hover .apx-msg__actions { display: flex; }
+.apx-msg__actions button { font-size: 11px; color: var(--text-faint); }
+.apx-msg__actions button:hover { color: var(--primary); }
+.apx-reactions { display: flex; gap: 4px; flex-wrap: wrap; margin-top: 4px; }
+.apx-reaction { background: var(--surface-2); border: 1px solid var(--border); border-radius: var(--r-pill); padding: 1px 8px; font-size: 12px; cursor: pointer; }
+.apx-reaction.is-on { background: var(--primary-soft); border-color: var(--primary); }
+.apx-thread__compose { padding: 12px 16px; border-top: 1px solid var(--border); display: flex; gap: 10px; align-items: flex-end; position: relative; }
+
+.apx-emoji-pop { position: absolute; bottom: 58px; left: 12px; display: flex; flex-wrap: wrap; gap: 4px; width: 232px; padding: 8px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: var(--shadow-2); z-index: 20; animation: apxFadeUp var(--dur) both; }
+.apx-emoji-pop button { font-size: 20px; width: 34px; height: 34px; border-radius: var(--r-sm); transition: background var(--dur-fast); }
+.apx-emoji-pop button:hover { background: var(--surface-2); }
+#apx-thread-name { font-weight: 600; color: var(--text-strong); }
+#apx-thread-avatar-wrap { flex: none; }
+
+.apx-thread__compose textarea { flex: 1; resize: none; }
+
+@media (max-width: 860px) {
+  .apx-chat { grid-template-columns: 1fr; height: calc(100vh - 130px); }
+  .apx-chat__list { display: none; }
+  .apx-chat.show-list .apx-chat__list { display: block; }
+  .apx-chat.show-list .apx-thread { display: none; }
+}
+
+/* ---------- 会话项：可点击区 + 操作按钮 ---------- */
+.apx-chat__item { position: relative; display: block; padding: 0; }
+.apx-chat__item.is-pinned { background: linear-gradient(90deg, var(--primary-soft), transparent 60%); }
+.apx-chat__open { display: flex; gap: 12px; padding: 13px 42px 13px 16px; text-decoration: none; color: inherit; }
+.apx-chat__open .apx-avatar { flex: none; }
+.apx-chat__more {
+  position: absolute; top: 50%; right: 8px; transform: translateY(-50%);
+  width: 28px; height: 28px; border-radius: var(--r-xs); border: 1px solid var(--border);
+  background: var(--surface); color: var(--text-muted); cursor: pointer; opacity: 0;
+  transition: opacity var(--dur-fast), background var(--dur-fast);
+}
+.apx-chat__item:hover .apx-chat__more, .apx-chat__more:focus-visible { opacity: 1; }
+.apx-chat__more:hover { background: var(--surface-3); color: var(--text); }
+.apx-chat__flag { font-size: 11px; margin-right: 4px; color: var(--primary-text); }
+.apx-conv-menu { min-width: 170px; z-index: 220; }
+
+/* ---------- 会话区头部：正在输入 / 搜索 ---------- */
+.apx-thread__typing { font-size: 12px; color: var(--primary-text); margin-top: 2px; }
+.apx-thread__search { display: flex; gap: 8px; padding: 10px 14px; border-bottom: 1px solid var(--border); background: var(--surface-2); }
+.apx-thread__search .apx-input { flex: 1; height: 38px; }
+.apx-chat-search { max-height: 260px; overflow-y: auto; border-bottom: 1px solid var(--border); background: var(--surface); }
+.apx-chat-search__count { padding: 8px 14px; font-size: 12px; color: var(--text-faint); border-bottom: 1px solid var(--border); }
+.apx-chat-search__empty { padding: 18px 14px; font-size: 13px; color: var(--text-faint); text-align: center; }
+.apx-chat-search__item {
+  display: flex; align-items: center; gap: 10px; width: 100%; text-align: left;
+  padding: 10px 14px; background: none; border: none; border-bottom: 1px solid var(--border);
+  cursor: pointer; color: var(--text); font-size: 13px; transition: background var(--dur-fast);
+}
+.apx-chat-search__item:hover { background: var(--surface-2); }
+.apx-chat-search__who { color: var(--primary-text); flex: none; max-width: 90px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.apx-chat-search__text { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.apx-chat-search__time { color: var(--text-faint); font-size: 11px; flex: none; }
+
+/* ---------- 消息：引用 / 附件 / 高亮 ---------- */
+.apx-msg__col { min-width: 0; flex: 1; }
+.apx-msg--me .apx-msg__col { display: flex; flex-direction: column; align-items: flex-end; }
+.apx-msg__quote {
+  font-size: 12px; color: var(--text-muted); background: var(--surface-2);
+  border-left: 3px solid var(--brand-1); border-radius: var(--r-xs);
+  padding: 5px 9px; margin-bottom: 4px; max-width: 100%;
+  overflow: hidden; text-overflow: ellipsis; white-space: nowrap;
+}
+.apx-msg__quote b { color: var(--primary-text); margin-right: 4px; }
+.apx-msg__bubble--emoji { font-size: 28px; background: none !important; padding: 2px 4px !important; }
+.apx-msg__image { display: block; max-width: 240px; max-height: 240px; border-radius: var(--r-sm); cursor: zoom-in; }
+.apx-msg__file {
+  display: inline-flex; align-items: center; gap: 8px; text-decoration: none;
+  color: inherit; font-size: 13px; word-break: break-all;
+}
+.apx-msg__file-icon { font-size: 18px; }
+.apx-msg.is-highlight .apx-msg__bubble { box-shadow: 0 0 0 2px var(--brand-1); }
+.apx-msg.is-highlight { animation: apxPulse 1.6s var(--ease-out) 1; }
+
+/* ---------- 回复栏 ---------- */
+.apx-reply-bar {
+  display: flex; align-items: center; gap: 10px; padding: 8px 14px;
+  border-top: 1px solid var(--border); background: var(--surface-2); font-size: 13px;
+}
+.apx-reply-bar__label { color: var(--primary-text); flex: none; font-weight: 600; }
+.apx-reply-bar__text { flex: 1; min-width: 0; color: var(--text-muted); overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+
+/* ---------- 工具条 ---------- */
+.apx-thread__tools { flex-wrap: wrap; }
+.apx-thread__tools .apx-icon-btn { font-size: 16px; }
+
+@media (max-width: 860px) {
+  .apx-chat__more { opacity: 1; }
+  .apx-msg { max-width: 88%; }
+}
+
+@keyframes apxPulse {
+  0% { transform: scale(0.985); opacity: .6; }
+  100% { transform: scale(1); opacity: 1; }
+}

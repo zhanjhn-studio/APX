@@ -1,0 +1,19 @@
+/* =====================================================================
+ * APX · Notifications page
+ * ===================================================================== */
+.apx-noti-wrap { max-width: 720px; margin: 0 auto; }
+.apx-noti-head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 16px; }
+.apx-noti-title { font-size: 26px; font-weight: 700; color: var(--text-strong); }
+
+.apx-noti-list { display: flex; flex-direction: column; gap: 8px; }
+.apx-noti-item { display: flex; gap: 12px; align-items: flex-start; padding: 14px 16px; background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); position: relative; transition: background var(--dur-fast); animation: apxFadeUp var(--dur) both; }
+.apx-noti-item:hover { background: var(--surface-2); }
+.apx-noti-item.is-unread { border-left: 3px solid var(--brand-1); background: var(--surface-2); }
+.apx-noti-item__body { flex: 1; min-width: 0; }
+.apx-noti-text { color: var(--text); line-height: 1.5; }
+.apx-noti-text b { color: var(--text-strong); }
+.apx-noti-time { color: var(--text-faint); font-size: 12px; margin-top: 4px; }
+.apx-noti-dot { position: absolute; top: 14px; right: 14px; width: 8px; height: 8px; border-radius: 50%; background: var(--brand-1); }
+
+.apx-empty-center { text-align: center; color: var(--text-faint); padding: 64px 0; }
+.apx-empty-center svg { width: 48px; height: 48px; opacity: .4; margin-bottom: 12px; }

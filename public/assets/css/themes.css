@@ -1,0 +1,119 @@
+/* =====================================================================
+ * APX · 12 themes — only override layer-0/1 brand tokens.
+ * Mode (dark/light/auto) is controlled separately by data-apx-mode.
+ * Loaded after tokens.css so attribute selectors win by source order.
+ * ===================================================================== */
+
+/* graphite (default indigo) */
+[data-apx-theme="graphite"] {
+  --brand-1: #6366F1; --brand-2: #8B5CF6; --brand-3: #22D3EE;
+  --brand-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 55%, #22D3EE 120%);
+  --brand-glow-1: rgba(99,102,241,0.35); --brand-glow-2: rgba(139,92,246,0.28); --brand-glow-3: rgba(34,211,238,0.22);
+}
+/* graphite_pro (deeper violet) */
+[data-apx-theme="graphite_pro"] {
+  --brand-1: #6366F1; --brand-2: #7C3AED; --brand-3: #22D3EE;
+  --brand-gradient: linear-gradient(135deg, #6366F1 0%, #7C3AED 50%, #22D3EE 120%);
+  --brand-glow-1: rgba(99,102,241,0.40); --brand-glow-2: rgba(124,58,237,0.32); --brand-glow-3: rgba(34,211,238,0.24);
+}
+/* minimal (slate neutral) */
+[data-apx-theme="minimal"] {
+  --brand-1: #64748B; --brand-2: #94A3B8; --brand-3: #38BDF8;
+  --brand-gradient: linear-gradient(135deg, #64748B 0%, #94A3B8 55%, #38BDF8 120%);
+  --brand-glow-1: rgba(100,116,139,0.30); --brand-glow-2: rgba(148,163,184,0.22); --brand-glow-3: rgba(56,189,248,0.18);
+}
+/* light (kept as bright indigo, pair with light mode) */
+[data-apx-theme="light"] {
+  --brand-1: #4F46E5; --brand-2: #7C3AED; --brand-3: #06B6D4;
+  --brand-gradient: linear-gradient(135deg, #4F46E5 0%, #7C3AED 55%, #06B6D4 120%);
+  --brand-glow-1: rgba(79,70,229,0.30); --brand-glow-2: rgba(124,58,237,0.24); --brand-glow-3: rgba(6,182,212,0.20);
+}
+/* dark (kept as deep indigo, pair with dark mode) */
+[data-apx-theme="dark"] {
+  --brand-1: #6366F1; --brand-2: #8B5CF6; --brand-3: #22D3EE;
+  --brand-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 55%, #22D3EE 120%);
+  --brand-glow-1: rgba(99,102,241,0.38); --brand-glow-2: rgba(139,92,246,0.30); --brand-glow-3: rgba(34,211,238,0.24);
+}
+/* blue */
+[data-apx-theme="blue"] {
+  --brand-1: #3B82F6; --brand-2: #2563EB; --brand-3: #38BDF8;
+  --brand-gradient: linear-gradient(135deg, #3B82F6 0%, #2563EB 55%, #38BDF8 120%);
+  --brand-glow-1: rgba(59,130,246,0.35); --brand-glow-2: rgba(37,99,235,0.28); --brand-glow-3: rgba(56,189,248,0.22);
+}
+/* purple */
+[data-apx-theme="purple"] {
+  --brand-1: #A855F7; --brand-2: #8B5CF6; --brand-3: #C084FC;
+  --brand-gradient: linear-gradient(135deg, #A855F7 0%, #8B5CF6 55%, #C084FC 120%);
+  --brand-glow-1: rgba(168,85,247,0.35); --brand-glow-2: rgba(139,92,246,0.28); --brand-glow-3: rgba(192,132,252,0.22);
+}
+/* pink */
+[data-apx-theme="pink"] {
+  --brand-1: #EC4899; --brand-2: #F472B6; --brand-3: #FB7185;
+  --brand-gradient: linear-gradient(135deg, #EC4899 0%, #F472B6 55%, #FB7185 120%);
+  --brand-glow-1: rgba(236,72,153,0.32); --brand-glow-2: rgba(244,114,182,0.26); --brand-glow-3: rgba(251,113,133,0.22);
+}
+/* green */
+[data-apx-theme="green"] {
+  --brand-1: #10B981; --brand-2: #34D399; --brand-3: #6EE7B7;
+  --brand-gradient: linear-gradient(135deg, #10B981 0%, #34D399 55%, #6EE7B7 120%);
+  --brand-glow-1: rgba(16,185,129,0.32); --brand-glow-2: rgba(52,211,153,0.26); --brand-glow-3: rgba(110,231,183,0.22);
+}
+/* gold */
+[data-apx-theme="gold"] {
+  --brand-1: #F59E0B; --brand-2: #FBBF24; --brand-3: #FCD34D;
+  --brand-gradient: linear-gradient(135deg, #F59E0B 0%, #FBBF24 55%, #FCD34D 120%);
+  --brand-glow-1: rgba(245,158,11,0.32); --brand-glow-2: rgba(251,191,36,0.26); --brand-glow-3: rgba(252,211,77,0.22);
+}
+/* cyber (neon) */
+[data-apx-theme="cyber"] {
+  --brand-1: #22D3EE; --brand-2: #06B6D4; --brand-3: #A3E635;
+  --brand-gradient: linear-gradient(135deg, #22D3EE 0%, #06B6D4 55%, #A3E635 120%);
+  --brand-glow-1: rgba(34,211,238,0.36); --brand-glow-2: rgba(6,182,212,0.30); --brand-glow-3: rgba(163,230,53,0.22);
+}
+/* mint */
+[data-apx-theme="mint"] {
+  --brand-1: #2DD4BF; --brand-2: #14B8A6; --brand-3: #5EEAD4;
+  --brand-gradient: linear-gradient(135deg, #2DD4BF 0%, #14B8A6 55%, #5EEAD4 120%);
+  --brand-glow-1: rgba(45,212,191,0.32); --brand-glow-2: rgba(20,184,166,0.26); --brand-glow-3: rgba(94,234,212,0.22);
+}
+
+/* =====================================================================
+ * mono · 黑白简约高级（默认主题）
+ * 纯灰阶基底 + 无彩色品牌色，随深/浅模式自适应。
+ * =================================================================== */
+[data-apx-theme="mono"] {
+  --brand-1: #FFFFFF; --brand-2: #E4E4E7; --brand-3: #A1A1AA;
+  --brand-gradient: linear-gradient(135deg, #FFFFFF 0%, #E4E4E7 60%, #B9BBC1 120%);
+  --brand-glow-1: rgba(255,255,255,0.12); --brand-glow-2: rgba(255,255,255,0.08); --brand-glow-3: rgba(255,255,255,0.05);
+  --on-brand: #0A0A0B;
+
+  --bg: #0A0A0B; --bg-2: #060607;
+  --bg-grad: radial-gradient(1100px 560px at 12% -8%, rgba(255,255,255,0.05), transparent 60%);
+  --surface: #131316; --surface-2: #1A1A1E; --surface-3: #232329; --surface-solid: #131316;
+  --text: #F2F2F3; --text-muted: #A1A1AA; --text-faint: #71717A; --text-strong: #FFFFFF;
+
+  --border: rgba(255,255,255,0.09); --border-strong: rgba(255,255,255,0.16);
+  --glass: rgba(16,16,18,0.72); --glass-2: rgba(20,20,23,0.62); --glass-border: rgba(255,255,255,0.10);
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.45), 0 2px 8px rgba(0,0,0,0.30);
+  --shadow-2: 0 6px 22px rgba(0,0,0,0.42), 0 14px 44px rgba(0,0,0,0.32);
+  --shadow-3: 0 20px 54px rgba(0,0,0,0.55);
+}
+[data-apx-theme="mono"][data-apx-mode="light"] {
+  --brand-1: #111113; --brand-2: #3F3F46; --brand-3: #71717A;
+  --brand-gradient: linear-gradient(135deg, #18181B 0%, #3F3F46 60%, #52525B 120%);
+  --brand-glow-1: rgba(0,0,0,0.10); --brand-glow-2: rgba(0,0,0,0.06); --brand-glow-3: rgba(0,0,0,0.04);
+  --on-brand: #FFFFFF;
+
+  --bg: #F7F7F8; --bg-2: #EDEDEE;
+  --bg-grad: radial-gradient(1100px 560px at 12% -8%, rgba(0,0,0,0.03), transparent 60%);
+  --surface: #FFFFFF; --surface-2: #F4F4F5; --surface-3: #E8E8EA; --surface-solid: #FFFFFF;
+  --text: #18181B; --text-muted: #52525B; --text-faint: #8B8B93; --text-strong: #09090B;
+
+  --border: rgba(0,0,0,0.10); --border-strong: rgba(0,0,0,0.16);
+  --glass: rgba(255,255,255,0.74); --glass-2: rgba(255,255,255,0.60); --glass-border: rgba(0,0,0,0.10);
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.06), 0 2px 8px rgba(0,0,0,0.05);
+  --shadow-2: 0 6px 22px rgba(0,0,0,0.09), 0 14px 40px rgba(0,0,0,0.07);
+  --shadow-3: 0 18px 48px rgba(0,0,0,0.12);
+}

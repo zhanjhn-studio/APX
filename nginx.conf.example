@@ -1,0 +1,95 @@
+# APX · Nginx 示例配置（PHP-FPM）
+# 两种部署方式均已支持：
+#   方式 A（推荐，安全）：root 指向 public/，仅有入口与静态资源暴露在外。
+#   方式 B（Discuz 式，根目录部署）：root 指向项目根，并把 /assets 别名到 public/assets。
+# 下面默认给出方式 B（对应项目根 index.php / install.php），方式 A 见文末注释。
+#
+# 注意：APX 现已采用「查询串路由」index.php?r=...，因此无需服务器 URL 重写（try_files）
+# 即可在任意 Nginx/Apache 默认配置或 php -S 下直接运行；下方 try_files 仅为可选的干净 URL 增强。
+
+server {
+    listen 80;
+    server_name your-domain.com;
+
+    # —— 方式 B：root 指向项目根 ——
+    root /var/www/apx;
+    index index.php;
+
+    # 安全响应头
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "SAMEORIGIN" always;
+    add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+    add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+    add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'" always;
+
+    # 上传大小
+    client_max_body_size 20m;
+
+    # 静态资源：项目根部署时 /assets 指向 public/assets
+    location ^~ /assets/ {
+        alias /var/www/apx/public/assets/;
+        # 禁止执行上传目录中的 PHP（纵深防御）
+        location ~* \.php$ { return 403; }
+        location ~* \.(css|js|svg|png|jpg|jpeg|gif|webp|woff2?|ico)$ {
+            expires 7d;
+            access_log off;
+            add_header Cache-Control "public, immutable";
+        }
+        try_files $uri =404;
+    }
+
+    # 禁止执行上传目录中的 PHP（即便被直接访问）
+    location ^~ /assets/uploads/ {
+        alias /var/www/apx/public/assets/uploads/;
+        location ~* \.php$ { return 403; }
+        try_files $uri =404;
+    }
+
+    # 美化 URL：除真实文件外全部转发给 index.php
+    location / {
+        try_files $uri $uri/ /index.php?$query_string;
+    }
+
+    # PHP 处理（含项目根与 public/ 下的入口）
+    location ~ \.php$ {
+        # SSE / 长轮询关闭缓冲
+        fastcgi_buffering off;
+        fastcgi_read_timeout 300s;
+        include fastcgi_params;
+        fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+        fastcgi_pass unix:/run/php/php-fpm.sock;
+    }
+
+    # 拒绝访问受保护目录（配置 / 存储 / 数据库 / 内部目录）
+    location ~ ^/(config|storage|database|\.codebuddy)(/|$) { deny all; }
+}
+
+# —— 方式 A（推荐，安全）：root 指向 public/ ——
+# server {
+#     listen 80;
+#     server_name your-domain.com;
+#     root /var/www/apx/public;
+#     index index.php;
+#
+#     add_header X-Content-Type-Options "nosniff" always;
+#     add_header X-Frame-Options "SAMEORIGIN" always;
+#     add_header Content-Security-Policy "default-src 'self'; img-src 'self' data: https:; style-src 'self' 'unsafe-inline'; script-src 'self' 'unsafe-inline'; font-src 'self' data:; connect-src 'self'; frame-ancestors 'none'" always;
+#
+#     client_max_body_size 20m;
+#
+#     location ^~ /assets/uploads/ {
+#         location ~* \.php$ { return 403; }
+#         try_files $uri =404;
+#     }
+#     location ~* \.(css|js|svg|png|jpg|jpeg|gif|webp|woff2?|ico)$ {
+#         expires 7d; access_log off; add_header Cache-Control "public, immutable";
+#     }
+#     location / { try_files $uri $uri/ /index.php?$query_string; }
+#     location ~ \.php$ {
+#         fastcgi_buffering off; fastcgi_read_timeout 300s;
+#         include fastcgi_params;
+#         fastcgi_param SCRIPT_FILENAME $realpath_root$fastcgi_script_name;
+#         fastcgi_pass unix:/run/php/php-fpm.sock;
+#     }
+#     location ~ /(config|storage|database)/ { deny all; }
+# }

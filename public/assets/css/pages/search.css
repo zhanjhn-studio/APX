@@ -1,0 +1,63 @@
+/* APX · 搜索页 */
+.apx-search-hero { margin-bottom:8px; }
+.apx-search-box { display:flex; gap:10px; align-items:center; }
+.apx-search-box__input { flex:1; height:44px; border-radius:var(--r-pill); background:var(--surface-2); border:1px solid var(--border); padding:0 18px; color:var(--text); }
+.apx-search-box__input:focus { border-color:var(--primary); box-shadow:0 0 0 4px var(--primary-soft-2); outline:none; }
+
+.apx-user-list, .apx-topic-list { padding:8px 16px; }
+.apx-topic-list .apx-topic-row { border-bottom:1px solid var(--border); }
+.apx-topic-list .apx-topic-row:last-child { border-bottom:none; }
+
+.apx-search-panel[hidden] { display:none; }
+
+/* 两栏页面骨架（所有内容页共用） */
+.apx-page { display:flex; gap:24px; align-items:flex-start; }
+.apx-page > .apx-main { padding:0; flex:1 1 auto; min-width:0; }
+.apx-page > .apx-side { width:320px; flex:none; position:sticky; top:84px; display:flex; flex-direction:column; gap:18px; }
+.apx-page .apx-feed { display:block; }
+.apx-side__block { padding:16px; }
+.apx-side__title { font-weight:600; color:var(--text-strong); margin-bottom:10px; font-size:var(--fs-sub); }
+.apx-user-row { display:flex; align-items:center; gap:10px; padding:8px 0; }
+.apx-user-row__meta { flex:1; min-width:0; }
+.apx-user-row__name { font-weight:500; color:var(--text-strong); text-decoration:none; display:block; }
+.apx-user-row__handle { font-size:12px; color:var(--text-faint); }
+.apx-topic-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0; text-decoration:none; border-bottom:1px solid var(--border); }
+.apx-topic-row:last-child { border-bottom:none; }
+.apx-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.apx-pill { display:inline-flex; align-items:center; padding:5px 12px; border-radius:var(--r-pill); background:var(--surface-2); color:var(--text-muted); font-size:13px; text-decoration:none; transition:.15s; }
+.apx-pill--solid { background:var(--primary-soft); color:var(--text-strong); font-weight:600; }
+.apx-pill:hover { background:var(--surface); }
+.apx-tabs { display:flex; gap:6px; border-bottom:1px solid var(--border); }
+.apx-tab { padding:10px 14px; border:none; background:none; color:var(--text-muted); font-weight:500; cursor:pointer; border-bottom:2px solid transparent; }
+.apx-tab.is-active { color:var(--text-strong); border-bottom-color:var(--primary); }
+@media (max-width:1080px){ .apx-page{flex-direction:column;} .apx-page > .apx-side{width:100%; position:static;} }
+
+/* ---------- 实时搜索建议 ---------- */
+.apx-search-box { position: relative; }
+.apx-suggest {
+  position: absolute; top: calc(100% + 8px); left: 0; right: 0; z-index: 60;
+  background: var(--glass); backdrop-filter: blur(18px) saturate(140%);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  border: 1px solid var(--glass-border); border-radius: var(--r-md);
+  box-shadow: var(--shadow-3); padding: 6px; max-height: 380px; overflow-y: auto;
+  animation: apxFadeUp var(--dur) both;
+}
+.apx-suggest__item {
+  display: flex; align-items: center; gap: 10px; padding: 9px 12px;
+  border-radius: var(--r-sm); text-decoration: none; color: var(--text);
+  font-size: 13px; transition: background var(--dur-fast);
+}
+.apx-suggest__item:hover, .apx-suggest__item:focus-visible { background: var(--surface-2); }
+.apx-suggest__icon {
+  width: 24px; height: 24px; border-radius: var(--r-xs); flex: none;
+  display: inline-flex; align-items: center; justify-content: center;
+  background: var(--primary-soft); color: var(--primary-text); font-size: 12px; font-weight: 700;
+}
+.apx-suggest__label { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; color: var(--text-strong); }
+.apx-suggest__sub { font-size: 11px; color: var(--text-faint); flex: none; }
+.apx-suggest__group { font-size: 11px; color: var(--text-faint); flex: none; min-width: 44px; text-align: right; }
+.apx-suggest__item--all { border-top: 1px solid var(--border); margin-top: 4px; padding-top: 11px; border-radius: 0 0 var(--r-sm) var(--r-sm); }
+.apx-suggest__empty { padding: 16px; text-align: center; font-size: 13px; color: var(--text-faint); }
+.apx-group-list { padding: 8px 16px; }
+.apx-group-list .apx-user-row + .apx-user-row { border-top: 1px solid var(--border); }
+.apx-user-row__body { flex: 1; min-width: 0; }

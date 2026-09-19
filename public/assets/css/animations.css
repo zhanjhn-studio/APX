@@ -1,0 +1,78 @@
+/* =====================================================================
+ * APX · Keyframes & transition utilities
+ * ===================================================================== */
+
+/* page / section enter: staggered float-up */
+@keyframes apx-float-up {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* modal elastic scale */
+@keyframes apx-pop-in {
+  0%   { opacity: 0; transform: scale(0.92) translateY(8px); }
+  60%  { opacity: 1; transform: scale(1.015) translateY(0); }
+  100% { transform: scale(1) translateY(0); }
+}
+/* message bubble direction fade */
+@keyframes apx-msg-in {
+  from { opacity: 0; transform: translateY(10px) scale(0.98); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* toast slide */
+@keyframes apx-toast-in {
+  from { opacity: 0; transform: translateY(-12px) scale(0.96); }
+  to   { opacity: 1; transform: translateY(0) scale(1); }
+}
+/* glow pulse */
+@keyframes apx-glow-pulse {
+  0%, 100% { opacity: 0.55; transform: scale(1); }
+  50%      { opacity: 0.95; transform: scale(1.06); }
+}
+/* spinner */
+@keyframes apx-spin { to { transform: rotate(360deg); } }
+
+/* full page enter: subtle fade + rise */
+@keyframes apx-page-in {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+/* 主内容区进入过渡（打开页面时的过渡动画） */
+.apx-main, .apx-auth__form, .apx-admin__main { animation: apx-page-in var(--dur-slow) var(--ease-out) both; }
+
+/* utility animation classes */
+.apx-anim-float { animation: apx-float-up var(--dur-slow) var(--ease-out) both; }
+.apx-anim-pop   { animation: apx-pop-in var(--dur) var(--ease-spring) both; }
+.apx-anim-msg   { animation: apx-msg-in var(--dur) var(--ease-out) both; }
+.apx-anim-toast { animation: apx-toast-in var(--dur) var(--ease-spring) both; }
+
+/* staggered children: apply .apx-stagger to container, children animate with delay */
+.apx-stagger > * { animation: apx-float-up var(--dur-slow) var(--ease-out) both; }
+.apx-stagger > *:nth-child(1) { animation-delay: 0.04s; }
+.apx-stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.apx-stagger > *:nth-child(3) { animation-delay: 0.16s; }
+.apx-stagger > *:nth-child(4) { animation-delay: 0.22s; }
+.apx-stagger > *:nth-child(5) { animation-delay: 0.28s; }
+.apx-stagger > *:nth-child(6) { animation-delay: 0.34s; }
+.apx-stagger > *:nth-child(7) { animation-delay: 0.40s; }
+.apx-stagger > *:nth-child(8) { animation-delay: 0.46s; }
+
+.apx-spinner {
+  width: 18px; height: 18px; border-radius: 50%;
+  border: 2.5px solid var(--border-strong);
+  border-top-color: var(--primary);
+  animation: apx-spin 0.7s linear infinite; display: inline-block; vertical-align: middle;
+}
+.apx-btn.is-loading .apx-btn-label { opacity: 0.4; }
+.apx-btn.is-loading::after {
+  content: ""; position: absolute; right: 14px; top: 50%; transform: translateY(-50%);
+  width: 15px; height: 15px; border-radius: 50%;
+  border: 2px solid rgba(255,255,255,0.5); border-top-color: #fff;
+  animation: apx-spin 0.7s linear infinite;
+}
+
+/* 尊重“减少动效”偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .apx-main, .apx-auth__form, .apx-admin__main,
+  .apx-anim-float, .apx-anim-pop, .apx-anim-msg, .apx-anim-toast,
+  .apx-stagger > * { animation: none !important; }
+}

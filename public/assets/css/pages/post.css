@@ -1,0 +1,84 @@
+/* ===== 动态卡片与互动 ===== */
+.apx-feed { display: grid; grid-template-columns: minmax(0, 1fr) 320px; gap: 22px; align-items: start; }
+.apx-feed__col--left { min-width: 0; display: flex; flex-direction: column; gap: 16px; }
+.apx-feed__col--right { display: flex; flex-direction: column; gap: 16px; position: sticky; top: 84px; }
+
+.apx-post-box { display: flex; gap: 12px; align-items: flex-start; }
+.apx-composer__tools { display: flex; align-items: center; gap: 6px; }
+.apx-composer__tools .apx-select { height: 30px; padding: 0 8px; font-size: 13px; }
+.apx-composer__media { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 8px; }
+.apx-media-preview { position: relative; width: 76px; height: 76px; border-radius: var(--r-sm); overflow: hidden; border: 1px solid var(--border); }
+.apx-media-preview__x { position: absolute; top: 2px; right: 2px; width: 18px; height: 18px; border-radius: 50%; border: none; background: rgba(0,0,0,.55); color: #fff; font-size: 12px; line-height: 1; cursor: pointer; }
+.apx-media-thumb { width: 100%; height: 100%; object-fit: cover; display: block; }
+
+.apx-post { padding: 16px; }
+.apx-post__head { display: flex; align-items: center; gap: 10px; }
+.apx-post__meta { flex: 1; min-width: 0; }
+.apx-post__name { font-weight: 600; color: var(--text-strong); }
+.apx-post__sub { font-size: 12px; color: var(--text-faint); display: flex; gap: 6px; align-items: center; }
+.apx-post__vis { font-size: 12px; }
+.apx-post__head-actions { display: flex; gap: 2px; }
+.apx-post__origin { margin: 10px 0; padding: 10px 12px; border: 1px solid var(--border); border-radius: var(--r-sm); background: var(--bg-1); }
+.apx-post__origin-head { display: flex; align-items: center; gap: 8px; margin-bottom: 4px; }
+.apx-post__origin-name { font-weight: 600; color: var(--text-strong); font-size: 13px; }
+.apx-post__origin-body { font-size: 13px; color: var(--text); }
+.apx-post__body { display: block; margin-top: 10px; color: var(--text); line-height: 1.7; white-space: pre-wrap; word-break: break-word; }
+.apx-post__body:hover { color: var(--text-strong); }
+
+.apx-post__media { display: grid; gap: 6px; margin-top: 12px; border-radius: var(--r-md); overflow: hidden; }
+.apx-post__media--1 { grid-template-columns: 1fr; max-width: 460px; }
+.apx-post__media--2 { grid-template-columns: 1fr 1fr; }
+.apx-post__media--3, .apx-post__media--4 { grid-template-columns: 1fr 1fr; }
+.apx-media { position: relative; padding: 0; border: none; background: var(--bg-1); border-radius: var(--r-sm); overflow: hidden; cursor: zoom-in; }
+.apx-media--img { display: block; }
+.apx-media img { width: 100%; height: 100%; max-height: 420px; object-fit: cover; display: block; }
+.apx-media--video { width: 100%; max-width: 460px; }
+
+.apx-post__topics { margin-top: 10px; display: flex; flex-wrap: wrap; gap: 6px; }
+.apx-chip { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 999px; background: color-mix(in srgb, var(--primary) 14%, transparent); color: var(--primary-strong, var(--primary)); font-size: 13px; text-decoration: none; transition: background var(--dur-fast); }
+.apx-chip:hover { background: color-mix(in srgb, var(--primary) 26%, transparent); }
+.apx-chip-row { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.apx-post__actions { display: flex; gap: 6px; margin-top: 12px; border-top: 1px solid var(--border); padding-top: 8px; }
+.apx-post__action { flex: 1; display: inline-flex; align-items: center; justify-content: center; gap: 6px; padding: 7px 8px; border: none; background: transparent; color: var(--text-faint); border-radius: var(--r-sm); cursor: pointer; transition: background var(--dur-fast), color var(--dur-fast); }
+.apx-post__action:hover { background: var(--surface-2); color: var(--text); }
+.apx-post__action.is-active { color: var(--primary); }
+.apx-post__action svg { width: 18px; height: 18px; }
+.apx-post__action .cnt { font-size: 13px; }
+
+.apx-link { color: var(--primary); text-decoration: none; }
+.apx-link:hover { text-decoration: underline; }
+.apx-topic-link { color: var(--primary); text-decoration: none; font-weight: 500; }
+.apx-mention { color: var(--primary); text-decoration: none; }
+
+/* 评论 */
+.apx-post__comments { margin-top: 4px; border-top: 1px dashed var(--border); padding-top: 10px; }
+.apx-comment-list { display: flex; flex-direction: column; gap: 12px; }
+.apx-comment__head { display: flex; align-items: center; gap: 8px; }
+.apx-comment__name { font-weight: 600; color: var(--text-strong); font-size: 13px; }
+.apx-comment__time { font-size: 12px; color: var(--text-faint); margin-left: 6px; }
+.apx-comment__body { margin: 4px 0 4px 38px; color: var(--text); line-height: 1.6; white-space: pre-wrap; word-break: break-word; }
+.apx-comment__actions { margin-left: 38px; display: flex; gap: 12px; }
+.apx-link-btn { border: none; background: none; color: var(--text-faint); font-size: 12px; cursor: pointer; padding: 0; }
+.apx-link-btn:hover, .apx-link-btn.is-active { color: var(--primary); }
+.apx-comment--child { margin-left: 30px; border-left: 2px solid var(--border); padding-left: 10px; }
+.apx-comment-form { margin-top: 12px; }
+
+.apx-post__edit { margin-top: 10px; }
+.apx-post__edit textarea { width: 100%; }
+
+/* 灯箱 */
+.apx-lightbox { position: fixed; inset: 0; z-index: 100; display: none; }
+.apx-lightbox.is-open { display: block; }
+.apx-lightbox__backdrop { position: absolute; inset: 0; background: rgba(0,0,0,.8); backdrop-filter: blur(4px); }
+.apx-lightbox__img { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); max-width: 92vw; max-height: 92vh; border-radius: var(--r-md); box-shadow: var(--shadow-2); }
+.apx-lightbox__close { position: absolute; top: 18px; right: 22px; width: 38px; height: 38px; border-radius: 50%; border: none; background: rgba(255,255,255,.15); color: #fff; font-size: 22px; cursor: pointer; }
+
+.apx-empty { text-align: center; padding: 40px 16px; }
+.apx-empty__title { color: var(--text-faint); }
+
+@media (max-width: 900px) {
+  .apx-feed { grid-template-columns: 1fr; }
+  .apx-feed__col--right { position: static; flex-direction: row; flex-wrap: wrap; }
+  .apx-feed__col--right .apx-card { flex: 1 1 240px; }
+}

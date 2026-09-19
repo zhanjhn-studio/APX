@@ -1,0 +1,46 @@
+# =====================================================================
+# APX · Git 忽略规则
+# 原则：本地配置、运行时数据、用户上传、备份产物一律不入库。
+# =====================================================================
+
+# ── 本地数据库配置（含账号密码，严禁提交）──────────────────────────
+/config/database.php
+config/database.php
+
+# ── 运行时数据（缓存 / 日志 / 上传）─────────────────────────────────
+storage/cache/*
+storage/logs/*
+storage/uploads/*
+!storage/cache/.gitkeep
+!storage/logs/.gitkeep
+!storage/uploads/.gitkeep
+
+# 用户上传的媒体（web 可访问目录）
+public/assets/uploads/*
+!public/assets/uploads/.gitkeep
+
+# ── 更新与备份产物 ─────────────────────────────────────────────────
+.apx-backup-*/
+*.zip
+storage/cache/updates/
+
+# ── 本地工具与编辑器 ──────────────────────────────────────────────
+# 说明：.codebuddy/ 为本地 IDE/协作工具数据（含内部笔记），如需随仓库备份可删除本行
+.codebuddy/
+.idea/
+.vscode/
+*.code-workspace
+
+# ── 系统与依赖 ────────────────────────────────────────────────────
+.DS_Store
+Thumbs.db
+desktop.ini
+node_modules/
+vendor/
+
+# ── 临时与调试文件 ────────────────────────────────────────────────
+*.log
+*.tmp
+_diag.php
+_apx_*.ps1
+_apx_*.txt

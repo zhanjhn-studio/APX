@@ -1,0 +1,21 @@
+# APX · Apache 配置（web 根指向项目根时生效；nginx 请用 nginx.conf.example）
+# 作用：① 干净 URL 转发到 index.php  ② 保护内部目录  ③ 便于 /assets 静态资源直取
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # ① 受保护目录一律拒绝（配置 / 存储 / 数据库 / 内部目录）
+    RewriteRule ^(config|storage|database|\.codebuddy)(/|$) - [F,L]
+
+    # ② 已存在的真实文件或目录直接放行（含 public/assets 静态资源）
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # ③ 其余未知路径交给前端控制器（干净 URL：/login、/home ...）
+    RewriteRule ^ index.php [L]
+</IfModule>
+
+# 未启用 mod_rewrite 时，静态资源仍可由 bootstrap 的 /assets 直通兜底返回
+<IfModule mod_headers.c>
+    Header set X-Content-Type-Options "nosniff"
+</IfModule>

@@ -1,0 +1,88 @@
+/* =====================================================================
+ * APX · Base reset, typography, focus, scrollbar, utilities
+ * ===================================================================== */
+*, *::before, *::after { box-sizing: border-box; }
+* { margin: 0; padding: 0; }
+
+html { -webkit-text-size-adjust: 100%; scroll-behavior: smooth; }
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--fs-body);
+  line-height: 1.6;
+  color: var(--text);
+  background: var(--bg);
+  background-image: var(--bg-grad);
+  background-attachment: fixed;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+h1, h2, h3, h4 { color: var(--text-strong); line-height: 1.25; font-weight: 600; }
+h1 { font-size: var(--fs-h1); }
+h2 { font-size: var(--fs-h2); }
+h3 { font-size: var(--fs-sub); }
+p { color: var(--text); }
+a { color: var(--primary); text-decoration: none; transition: color var(--dur-fast) var(--ease-out); }
+a:hover { color: var(--primary-2); }
+img, svg, video { display: block; max-width: 100%; }
+button { font-family: inherit; cursor: pointer; border: none; background: none; color: inherit; }
+input, textarea, select { font-family: inherit; font-size: var(--fs-body); color: inherit; }
+ul, ol { list-style: none; }
+small { font-size: var(--fs-xs); }
+
+/* focus ring */
+:focus-visible {
+  outline: 2px solid var(--primary);
+  outline-offset: 2px;
+  border-radius: var(--r-xs);
+}
+::selection { background: var(--primary-soft); color: var(--text-strong); }
+
+/* scrollbar */
+* { scrollbar-width: thin; scrollbar-color: var(--surface-3) transparent; }
+*::-webkit-scrollbar { width: 10px; height: 10px; }
+*::-webkit-scrollbar-thumb { background: var(--surface-3); border-radius: var(--r-pill); border: 2px solid transparent; background-clip: padding-box; }
+*::-webkit-scrollbar-thumb:hover { background: var(--text-faint); background-clip: padding-box; }
+
+/* selection / disabled */
+[disabled], .is-disabled { opacity: 0.55; pointer-events: none; }
+
+/* utilities */
+.apx-container { width: 100%; max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+.apx-sr-only { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.apx-hidden { display: none !important; }
+.apx-text-muted { color: var(--text-muted); }
+.apx-text-faint { color: var(--text-faint); }
+.apx-text-strong { color: var(--text-strong); font-weight: 600; }
+.apx-flex { display: flex; }
+.apx-flex-center { display: flex; align-items: center; justify-content: center; }
+.apx-items-center { align-items: center; }
+.apx-justify-between { justify-content: space-between; }
+.apx-gap-1 { gap: 6px; } .apx-gap-2 { gap: 10px; } .apx-gap-3 { gap: 16px; }
+.apx-flex-1 { flex: 1; min-width: 0; }
+.apx-truncate { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.apx-nowrap { white-space: nowrap; }
+.apx-mt-2 { margin-top: 10px; } .apx-mt-3 { margin-top: 16px; } .apx-mt-4 { margin-top: 24px; } .apx-mb-2 { margin-bottom: 10px; }
+.apx-mono { font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace; font-size: var(--fs-sm); }
+.apx-text-center { text-align: center; }
+.apx-gradient-text {
+  background: var(--primary-grad);
+  -webkit-background-clip: text; background-clip: text;
+  -webkit-text-fill-color: transparent; color: transparent;
+}
+
+/* skeleton shimmer */
+.apx-skeleton {
+  background: var(--skeleton);
+  background-size: 200% 100%;
+  border-radius: var(--r-sm);
+  animation: apx-shimmer 1.4s linear infinite;
+}
+@keyframes apx-shimmer { 0% { background-position: 200% 0; } 100% { background-position: -200% 0; } }
+
+/* reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after { animation-duration: 0.001ms !important; animation-iteration-count: 1 !important; transition-duration: 0.001ms !important; scroll-behavior: auto !important; }
+}

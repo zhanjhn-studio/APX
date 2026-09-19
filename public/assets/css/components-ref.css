@@ -1,0 +1,416 @@
+/* =====================================================================
+ * APX · UI Kit (参考 csscankao.txt 中 Uiverse 组件，适配 APX 三层令牌)
+ * 全部使用语义令牌，自动跟随 12 主题与深/浅/跟随外观。
+ * 仅新增类，不覆盖 components.css 既有规则。
+ * ===================================================================== */
+
+/* ---------------------------------------------------------------------
+ * 1. 弹出/同意小卡片（参考 00Kubi cookie card）
+ * 结构：.apx-popup > .apx-popup__head / __desc / __actions
+ * ------------------------------------------------------------------- */
+.apx-popup {
+  width: min(340px, 92vw);
+  background: var(--surface);
+  border: 1px solid var(--glass-border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-2);
+  display: flex; flex-direction: column; align-items: center;
+  gap: 13px; padding: 22px 26px; position: relative; overflow: hidden;
+  animation: apx-pop-in var(--dur) var(--ease-spring) both;
+}
+.apx-popup__icon { width: 50px; height: 50px; color: var(--primary); }
+.apx-popup__head { font-size: var(--fs-sub); font-weight: 700; color: var(--text-strong); }
+.apx-popup__desc { text-align: center; font-size: var(--fs-sm); color: var(--text-muted); line-height: 1.6; }
+.apx-popup__desc a { color: var(--primary); font-weight: 600; }
+.apx-popup__desc a:hover { text-decoration: underline; }
+.apx-popup__actions { display: flex; gap: 12px; }
+.apx-popup__btn {
+  height: 32px; padding: 0 18px; border: none; border-radius: var(--r-pill);
+  font-weight: 600; font-size: var(--fs-sm); cursor: pointer; transition: all var(--dur-fast) var(--ease-out);
+}
+.apx-popup__btn--primary { background: var(--primary-grad); color: var(--on-brand); box-shadow: 0 6px 16px var(--glow-1); }
+.apx-popup__btn--primary:hover { box-shadow: 0 10px 22px var(--glow-2); transform: translateY(-1px); }
+.apx-popup__btn--ghost { background: var(--surface-3); color: var(--text); }
+.apx-popup__btn--ghost:hover { background: var(--surface-2); }
+
+/* ---------------------------------------------------------------------
+ * 2. 提示条 hover 微交互（参考 Cybercom682 alert，纯 CSS 适配）
+ * 在 components.css 的 .apx-alert 基础上增加轻微放大反馈
+ * ------------------------------------------------------------------- */
+.apx-alert { transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast); }
+.apx-alert:hover { transform: translateY(-1px) scale(1.005); box-shadow: var(--shadow-2); }
+
+/* ---------------------------------------------------------------------
+ * 2b. 键值行（后台表格、会话信息弹窗等通用）
+ * 结构：<div class="apx-update-row"><span>标签</span><b>值</b></div>
+ * ------------------------------------------------------------------- */
+.apx-update-row { display: flex; justify-content: space-between; align-items: center; gap: 16px; padding: 11px 2px; border-bottom: 1px solid var(--border); }
+.apx-update-row:last-child { border-bottom: none; }
+.apx-update-row span { color: var(--text-muted); }
+.apx-update-row b { color: var(--text-strong); font-weight: 600; }
+
+/* ---------------------------------------------------------------------
+ * 3. 点阵加载（参考 Nawsome dots loader）
+ * 结构：<div class="apx-loader-dots"><i></i><i></i><i></i></div>
+ * ------------------------------------------------------------------- */
+.apx-loader-dots { position: relative; width: 78px; height: 50px; }
+.apx-loader-dots > i {
+  position: absolute; top: 50%; left: 50%; width: 40px; height: 20px;
+  margin: -10px 0 0 -20px; border-radius: 0 0 5px 5px; background: var(--brand-1);
+  animation: apx-dots1 2.4s cubic-bezier(.55,.3,.24,.99) infinite;
+}
+.apx-loader-dots > i:nth-child(2) { background: var(--brand-2); animation-name: apx-dots2; }
+.apx-loader-dots > i:nth-child(3) {
+  width: 16px; height: 4px; margin: 0 0 0 -8px; border-radius: 10px; background: var(--brand-3);
+  animation-name: apx-dots3;
+}
+@keyframes apx-dots1 {
+  3%,97% { width: 40px; height: 20px; margin: -10px 0 0 -20px; }
+  30%,36% { width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 8px; }
+  63%,69% { width: 16px; height: 4px; margin: 16px 0 0 -8px; border-radius: 10px; }
+}
+@keyframes apx-dots2 {
+  3%,97% { height: 18px; width: 36px; margin: -9px 0 0 -18px; }
+  30%,36% { width: 7px; height: 10px; margin: -5px 0 0 -3.5px; }
+  63%,69% { width: 4px; height: 3px; margin: -1px 0 0 -2px; }
+}
+@keyframes apx-dots3 {
+  3%,97% { height: 4px; width: 16px; margin: 16px 0 0 -8px; }
+  30%,36% { width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 8px; }
+  63%,69% { width: 4px; height: 4px; margin: -2px 0 0 -2px; border-radius: 10px; }
+}
+
+/* ---------------------------------------------------------------------
+ * 4. 波浪浮动标签输入框（参考 AbanoubMagdy1 wave-group）
+ * 结构：
+ * <label class="apx-field apx-field--wave">
+ *   <input class="apx-input" placeholder=" ">
+ *   <span class="apx-field__label"><span style="--i:0">U</span>...</span>
+ *   <span class="apx-field__bar"></span>
+ * </label>
+ * 简化版：label 整体上浮（无需逐字动画也能工作）
+ * ------------------------------------------------------------------- */
+.apx-field--wave { position: relative; display: block; }
+.apx-field--wave .apx-input {
+  background: transparent; border: none; border-bottom: 1.5px solid var(--border-strong);
+  border-radius: 0; padding: 14px 4px 8px; height: auto; color: var(--text);
+}
+.apx-field--wave .apx-input:focus { outline: none; box-shadow: none; border-bottom-color: var(--primary); }
+.apx-field--wave .apx-field__label {
+  position: absolute; left: 4px; top: 14px; color: var(--text-faint);
+  font-size: var(--fs-body); pointer-events: none; display: flex; gap: 1px;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast), font-size var(--dur-fast);
+}
+.apx-field--wave .apx-field__label > span { transition: transform var(--dur-fast) var(--ease-out); }
+.apx-field--wave .apx-input:focus ~ .apx-field__label,
+.apx-field--wave .apx-input:not(:placeholder-shown) ~ .apx-field__label {
+  transform: translateY(-16px); font-size: var(--fs-xs); color: var(--primary); font-weight: 600;
+}
+.apx-field--wave .apx-field__bar { position: relative; display: block; width: 100%; height: 2px; }
+.apx-field--wave .apx-field__bar::before,
+.apx-field--wave .apx-field__bar::after {
+  content: ''; position: absolute; bottom: 0; height: 2px; width: 0; background: var(--primary);
+  transition: width var(--dur-fast) var(--ease-out);
+}
+.apx-field--wave .apx-field__bar::before { left: 50%; }
+.apx-field--wave .apx-field__bar::after { right: 50%; }
+.apx-field--wave .apx-input:focus ~ .apx-field__bar::before,
+.apx-field--wave .apx-input:focus ~ .apx-field__bar::after { width: 50%; }
+
+/* ---------------------------------------------------------------------
+ * 5. 可展开搜索框（参考 krlozCJ）
+ * 折叠为图标圆形，聚焦/有内容时展开
+ * ------------------------------------------------------------------- */
+.apx-search-expand { position: relative; --size: 40px; display: inline-flex; align-items: center; }
+.apx-search-expand__input {
+  height: var(--size); width: var(--size); font-size: 15px; color: var(--text);
+  border: 1px solid var(--border); background: var(--surface-2); border-radius: var(--r-pill);
+  padding: 0 14px; outline: none; cursor: pointer;
+  transition: all var(--dur) var(--ease-out); box-shadow: var(--shadow-1);
+}
+.apx-search-expand__input:focus,
+.apx-search-expand__input:not(:placeholder-shown) {
+  width: 220px; cursor: text;
+  box-shadow: inset 2px 2px 6px rgba(0,0,0,.18), inset -2px -2px 6px rgba(255,255,255,.04);
+  background: var(--surface);
+}
+.apx-search-expand__icon {
+  position: absolute; left: 0; top: 0; width: var(--size); height: var(--size);
+  display: flex; align-items: center; justify-content: center; color: var(--text-muted); pointer-events: none;
+}
+.apx-search-expand__input:focus ~ .apx-search-expand__icon,
+.apx-search-expand__input:not(:placeholder-shown) ~ .apx-search-expand__icon { color: var(--primary); }
+
+/* ---------------------------------------------------------------------
+ * 6. 文件拖拽上传区（参考 csemszepp / jamrockjones 融合）
+ * ------------------------------------------------------------------- */
+.apx-dropzone {
+  min-height: 180px; width: 100%; display: flex; flex-direction: column;
+  align-items: center; justify-content: center; gap: 14px; cursor: pointer;
+  border: 2px dashed var(--border-strong); background: var(--surface-2);
+  border-radius: var(--r-md); padding: 22px; color: var(--text-muted);
+  transition: border-color var(--dur-fast), background var(--dur-fast), transform var(--dur-fast);
+}
+.apx-dropzone:hover,
+.apx-dropzone.is-dragover { border-color: var(--primary); background: var(--primary-soft); transform: translateY(-2px); }
+.apx-dropzone__icon { width: 54px; height: 54px; color: var(--text-faint); }
+.apx-dropzone.is-dragover .apx-dropzone__icon { color: var(--primary); }
+.apx-dropzone__text { font-size: var(--fs-sm); }
+.apx-dropzone__text b { color: var(--primary); font-weight: 600; }
+.apx-dropzone input[type="file"] { display: none; }
+
+/* 文件夹上传（参考 jamrockjones 浮动文件夹，简化为装饰） */
+.apx-folder-upload {
+  --folder-W: 120px; --folder-H: 80px;
+  display: flex; flex-direction: column; align-items: center; justify-content: flex-end;
+  padding: 10px; border-radius: var(--r-md); background: var(--primary-grad);
+  box-shadow: var(--shadow-2); height: calc(var(--folder-H) * 1.7); position: relative;
+}
+.apx-folder-upload .apx-folder {
+  position: absolute; top: -20px; left: calc(50% - 60px);
+  animation: apx-float 2.5s infinite ease-in-out; transition: transform var(--dur) var(--ease-out);
+}
+.apx-folder-upload:hover .apx-folder { transform: scale(1.05) rotate(-3deg); }
+.apx-folder-upload .apx-folder__cover {
+  width: var(--folder-W); height: var(--folder-H); background: linear-gradient(135deg, #ffe563, #ffc663);
+  border-radius: 10px; box-shadow: 0 15px 30px rgba(0,0,0,.3);
+}
+.apx-folder-upload .apx-folder__tip {
+  background: linear-gradient(135deg, #ff9a56, #ff6f56); width: 80px; height: 20px;
+  border-radius: 12px 12px 0 0; position: absolute; top: -10px;
+}
+.apx-folder-upload__btn {
+  font-size: var(--fs-body); color: #fff; text-align: center; background: rgba(255,255,255,.18);
+  border: none; border-radius: var(--r-sm); cursor: pointer; padding: 10px 24px; position: relative;
+  transition: background var(--dur) var(--ease-out);
+}
+.apx-folder-upload__btn:hover { background: rgba(255,255,255,.36); }
+.apx-folder-upload__btn input[type="file"] { display: none; }
+@keyframes apx-float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-20px); } }
+
+/* ---------------------------------------------------------------------
+ * 7. 星级评分（参考 PriyanshuGupta28）
+ * 结构：<div class="apx-rating">5×<input radio><label>★</label></div>
+ * ------------------------------------------------------------------- */
+.apx-rating { display: inline-flex; flex-direction: row-reverse; }
+.apx-rating input { display: none; }
+.apx-rating label {
+  cursor: pointer; color: var(--text-faint); font-size: 30px; line-height: 1;
+  transition: color var(--dur-fast) var(--ease-out), transform var(--dur-fast);
+}
+.apx-rating label:hover,
+.apx-rating label:hover ~ label,
+.apx-rating input:checked ~ label { color: var(--brand-3); }
+.apx-rating input:checked ~ label:hover { transform: scale(1.12); }
+
+/* ---------------------------------------------------------------------
+ * 8. 分段控件 / 玻璃单选（参考 Yaya12085 / chase2k25，使用 :has() 滑动指示器）
+ * 结构：
+ * <div class="apx-segmented">
+ *   <input type="radio" name="x" id="s1" checked><label for="s1">A</label>
+ *   <input type="radio" name="x" id="s2"><label for="s2">B</label>
+ *   <span class="apx-segmented__glider"></span>
+ * </div>
+ * ------------------------------------------------------------------- */
+.apx-segmented {
+  position: relative; display: inline-flex; flex-wrap: wrap; gap: 0;
+  background: var(--surface-2); padding: 4px; border-radius: var(--r-pill);
+  border: 1px solid var(--border); box-shadow: var(--shadow-1);
+}
+.apx-segmented input { position: absolute; opacity: 0; pointer-events: none; }
+.apx-segmented label {
+  position: relative; z-index: 2; flex: 1; text-align: center; padding: 8px 16px;
+  border-radius: var(--r-pill); cursor: pointer; color: var(--text-muted);
+  font-size: var(--fs-sm); font-weight: 500; transition: color var(--dur-fast) var(--ease-out);
+  white-space: nowrap;
+}
+.apx-segmented input:checked + label { color: var(--text-strong); font-weight: 600; }
+.apx-segmented__glider {
+  position: absolute; z-index: 1; top: 4px; bottom: 4px; left: 4px;
+  border-radius: var(--r-pill); background: var(--surface-solid); box-shadow: var(--shadow-1);
+  transition: transform var(--dur) var(--ease-spring), width var(--dur) var(--ease-spring);
+}
+.apx-segmented:has(:nth-child(1):checked) .apx-segmented__glider { transform: translateX(0); }
+.apx-segmented:has(:nth-child(3):checked) .apx-segmented__glider { transform: translateX(100%); }
+.apx-segmented:has(:nth-child(5):checked) .apx-segmented__glider { transform: translateX(200%); }
+.apx-segmented:has(:nth-child(7):checked) .apx-segmented__glider { transform: translateX(300%); }
+/* glider 宽度由 JS 或此处固定 1 份（4 选项均分） */
+.apx-segmented__glider { width: calc((100% - 8px) / 2); }
+.apx-segmented:has(:nth-child(5):checked) .apx-segmented__glider,
+.apx-segmented:has(:nth-child(7):checked) .apx-segmented__glider { width: calc((100% - 8px) / 3); }
+.apx-segmented:has(:nth-child(7):checked) .apx-segmented__glider { width: calc((100% - 8px) / 4); }
+
+/* 玻璃单选（深色毛玻璃 + 滑块，参考 chase2k25） */
+.apx-radio-glass {
+  --bg: var(--glass); position: relative; display: inline-flex; background: var(--bg);
+  border-radius: var(--r-md); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--glass-border) 0 0 0 1px inset, var(--shadow-1); overflow: hidden;
+}
+.apx-radio-glass input { display: none; }
+.apx-radio-glass label {
+  position: relative; z-index: 2; min-width: 84px; padding: 12px 18px; cursor: pointer;
+  text-align: center; font-weight: 600; font-size: var(--fs-sm); color: var(--text-muted);
+  transition: color var(--dur) var(--ease-out);
+}
+.apx-radio-glass label:hover { color: var(--text); }
+.apx-radio-glass input:checked + label { color: #fff; }
+.apx-radio-glass__glider {
+  position: absolute; z-index: 1; top: 4px; bottom: 4px; left: 4px; border-radius: var(--r-sm);
+  background: var(--primary-grad); box-shadow: 0 0 18px var(--glow-1);
+  transition: transform var(--dur) var(--ease-spring), width var(--dur) var(--ease-spring);
+}
+.apx-radio-glass:has(:nth-child(1):checked) .apx-radio-glass__glider { transform: translateX(0); }
+.apx-radio-glass:has(:nth-child(3):checked) .apx-radio-glass__glider { transform: translateX(100%); }
+.apx-radio-glass:has(:nth-child(5):checked) .apx-radio-glass__glider { transform: translateX(200%); }
+.apx-radio-glass__glider { width: calc((100% - 8px) / 2); }
+.apx-radio-glass:has(:nth-child(3):checked) .apx-radio-glass__glider { width: calc((100% - 8px) / 3); }
+
+/* ---------------------------------------------------------------------
+ * 9. 滑动 Tabs（参考 Pradeepsaranbishnoi，:has() 驱动）
+ * ------------------------------------------------------------------- */
+.apx-tabs--slider {
+  display: flex; position: relative; background: var(--surface-2);
+  box-shadow: 0 0 1px 0 var(--primary-soft-2), 0 6px 12px 0 var(--primary-soft-2);
+  padding: 6px; border-radius: var(--r-pill); border: 1px solid var(--border);
+}
+.apx-tabs--slider * { z-index: 2; }
+.apx-tabs--slider input { display: none; }
+.apx-tabs--slider .apx-tab {
+  flex: 1; display: flex; align-items: center; justify-content: center; height: 32px;
+  min-width: 72px; font-size: var(--fs-sm); color: var(--text-muted); font-weight: 500;
+  border-radius: var(--r-pill); cursor: pointer; transition: color var(--dur-fast) var(--ease-out);
+}
+.apx-tabs--slider .apx-tab .apx-badge { margin-left: 6px; }
+.apx-tabs--slider input:checked + .apx-tab { color: var(--text-strong); font-weight: 600; }
+.apx-tabs--slider .apx-glider {
+  position: absolute; z-index: 1; display: flex; height: 32px; background: var(--surface-solid);
+  border-radius: var(--r-pill); box-shadow: var(--shadow-1); transition: transform var(--dur) var(--ease-spring);
+}
+.apx-tabs--slider:has(:nth-child(1):checked) .apx-glider { transform: translateX(0); }
+.apx-tabs--slider:has(:nth-child(3):checked) .apx-glider { transform: translateX(100%); }
+.apx-tabs--slider:has(:nth-child(5):checked) .apx-glider { transform: translateX(200%); }
+.apx-tabs--slider .apx-glider { width: calc((100% - 12px) / 2); }
+.apx-tabs--slider:has(:nth-child(3):checked) .apx-glider { width: calc((100% - 12px) / 3); }
+.apx-tabs--slider:has(:nth-child(5):checked) .apx-glider { width: calc((100% - 12px) / 4); }
+.apx-tabs--slider:has(:nth-child(7):checked) .apx-glider { width: calc((100% - 12px) / 5); }
+
+/* ---------------------------------------------------------------------
+ * 10. 表单卡片（参考 micaelgomestavares）
+ * ------------------------------------------------------------------- */
+.apx-form-card {
+  display: flex; flex-direction: column; gap: 10px;
+  background: var(--surface); padding: 30px; width: 100%; max-width: 460px;
+  border-radius: var(--r-lg); border: 1px solid var(--glass-border); box-shadow: var(--shadow-2);
+  font-family: inherit;
+}
+.apx-form-card .apx-inputForm {
+  border: 1.5px solid var(--border); border-radius: var(--r-sm); height: 50px;
+  display: flex; align-items: center; padding-left: 12px; background: var(--surface-2);
+  transition: border-color var(--dur-fast) var(--ease-out);
+}
+.apx-form-card .apx-inputForm:focus-within { border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft-2); }
+.apx-form-card .apx-input { margin-left: 10px; border: none; outline: none; background: transparent;
+  width: 100%; height: 100%; color: var(--text); font-size: var(--fs-body); }
+.apx-form-card .apx-flex-row { display: flex; align-items: center; gap: 10px; justify-content: space-between; }
+.apx-form-card .apx-flex-row label { font-size: var(--fs-sm); color: var(--text-muted); }
+.apx-form-card .apx-span { font-size: var(--fs-sm); margin-left: 4px; color: var(--primary); font-weight: 500; cursor: pointer; }
+.apx-form-card .apx-button-submit {
+  margin: 16px 0 6px; background: var(--primary-grad); border: none; color: var(--on-brand);
+  font-size: var(--fs-body); font-weight: 600; border-radius: var(--r-sm); height: 50px; width: 100%;
+  cursor: pointer; transition: filter var(--dur-fast), transform var(--dur-fast); box-shadow: var(--glow-1) 0 6px 18px;
+}
+.apx-form-card .apx-button-submit:hover { filter: brightness(1.06); transform: translateY(-1px); }
+.apx-form-card .apx-p { text-align: center; color: var(--text-muted); font-size: var(--fs-sm); margin: 4px 0; }
+
+/* ---------------------------------------------------------------------
+ * 11. 背景图案（参考 kennyotsu 网格 / chase2k25 立方体）
+ * ------------------------------------------------------------------- */
+.apx-bg-grid {
+  --grid: color-mix(in srgb, var(--text) 8%, transparent);
+  background-color: var(--bg);
+  background-image:
+    linear-gradient(0deg, transparent 24%, var(--grid) 25%, var(--grid) 26%, transparent 27%, transparent 74%, var(--grid) 75%, var(--grid) 76%, transparent 77%),
+    linear-gradient(90deg, transparent 24%, var(--grid) 25%, var(--grid) 26%, transparent 27%, transparent 74%, var(--grid) 75%, var(--grid) 76%, transparent 77%);
+  background-size: 55px 55px;
+}
+.apx-bg-cubes {
+  background: var(--bg);
+}
+.apx-bg-cubes .apx-bg-cubes__layer {
+  position: absolute; inset: -20% -30%; opacity: .7; z-index: 0; pointer-events: none;
+  background: repeating-linear-gradient(135deg, var(--surface-2) 0, var(--surface-2) 60px, color-mix(in srgb, var(--primary) 12%, transparent) 70px, var(--surface-3) 130px);
+  animation: apx-cube-move 18s linear infinite alternate;
+}
+@keyframes apx-cube-move { from { transform: translateY(0) scale(1); } to { transform: translateY(-20%) scale(1.02) rotate(1deg); } }
+
+/* ---------------------------------------------------------------------
+ * 12. Tooltip（参考 Shubh0408，纯 CSS 适配）
+ * 结构：
+ * <span class="apx-tooltip">
+ *   <button class="apx-tooltip__trigger">?</button>
+ *   <span class="apx-tooltip__bubble">说明文字</span>
+ * </span>
+ * ------------------------------------------------------------------- */
+.apx-tooltip { position: relative; display: inline-flex; }
+.apx-tooltip__trigger { cursor: help; }
+.apx-tooltip__bubble {
+  position: absolute; left: 50%; bottom: calc(100% + 10px); transform: translateX(-50%) translateY(6px);
+  width: max-content; max-width: 240px; padding: 8px 12px; border-radius: var(--r-sm);
+  background: var(--surface-solid); color: var(--text); font-size: var(--fs-sm); line-height: 1.5;
+  box-shadow: var(--shadow-2); border: 1px solid var(--glass-border);
+  opacity: 0; visibility: hidden; transition: opacity var(--dur-fast) var(--ease-out), transform var(--dur-fast) var(--ease-out);
+  z-index: 130;
+}
+.apx-tooltip__bubble::after {
+  content: ''; position: absolute; top: 100%; left: 50%; transform: translateX(-50%) rotate(45deg);
+  width: 8px; height: 8px; background: var(--surface-solid); border-right: 1px solid var(--glass-border); border-bottom: 1px solid var(--glass-border);
+}
+.apx-tooltip:hover .apx-tooltip__bubble { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+/* ---------------------------------------------------------------------
+ * 13. 发光 / 霓虹开关（参考 Galahhad / gharsh11032000 / MuhammadHasann 融合）
+ * 在 components.css .apx-switch 基础上提供 .apx-switch--glow / --neon
+ * ------------------------------------------------------------------- */
+.apx-switch--glow { --w: 46px; --h: 24px; --c: 18px;
+  --bg: var(--surface-3); --on: var(--success); --circle: #fff; }
+.apx-switch--glow input:checked + .slider { background: var(--on); box-shadow: 0 0 16px color-mix(in srgb, var(--on) 70%, transparent); }
+
+.apx-switch--neon { font-size: 17px; position: relative; display: inline-block; width: 3.4em; height: 2em; }
+.apx-switch--neon input { opacity: 0; width: 0; height: 0; }
+.apx-switch--neon .slider {
+  position: absolute; inset: 0; cursor: pointer; border: 2px solid var(--border-strong);
+  border-radius: 50px; background: var(--surface-2); transition: all var(--dur) var(--ease-spring);
+}
+.apx-switch--neon .slider::before {
+  position: absolute; content: ''; height: 1.4em; width: 1.4em; left: .2em; bottom: .2em;
+  background: var(--text); border-radius: inherit; transition: all var(--dur) var(--ease-spring);
+}
+.apx-switch--neon input:checked + .slider { border-color: var(--primary); box-shadow: 0 0 20px var(--glow-1); }
+.apx-switch--neon input:checked + .slider::before { background: var(--primary); transform: translateX(1.5em); }
+
+/* ---------------------------------------------------------------------
+ * 14. 简易软表单（参考 bociKond，适合浅色卡内快速表单）
+ * ------------------------------------------------------------------- */
+.apx-form-soft {
+  --clr: var(--primary); --clr-alpha: var(--primary-soft); --bg-dark: var(--surface-3); --bg-light: var(--text);
+  display: flex; flex-direction: column; align-items: center; gap: 14px; width: 100%; max-width: 320px;
+}
+.apx-form-soft .apx-input-span { width: 100%; display: flex; flex-direction: column; gap: 6px; }
+.apx-form-soft input[type="email"], .apx-form-soft input[type="password"], .apx-form-soft input[type="text"] {
+  border-radius: var(--r-sm); padding: 12px 12px; width: 100%; border: none; background: var(--clr-alpha);
+  outline: 2px solid var(--border); color: var(--text); transition: outline-color var(--dur-fast);
+}
+.apx-form-soft input:focus { outline-color: var(--clr); }
+.apx-form-soft .apx-label { align-self: flex-start; color: var(--clr); font-weight: 600; font-size: var(--fs-sm); }
+.apx-form-soft .apx-submit {
+  padding: 12px; width: 100%; display: flex; align-items: center; justify-content: center; gap: 6px;
+  border-radius: var(--r-pill); background: var(--bg-dark); color: var(--bg-light); border: none;
+  cursor: pointer; font-weight: 600; transition: all var(--dur);
+}
+.apx-form-soft .apx-submit:hover { background: var(--clr); color: var(--on-brand); }
+
+/* 降低动效偏好 */
+@media (prefers-reduced-motion: reduce) {
+  .apx-popup, .apx-loader-dots > i, .apx-folder-upload .apx-folder, .apx-bg-cubes .apx-bg-cubes__layer { animation: none; }
+  .apx-segmented__glider, .apx-radio-glass__glider, .apx-tabs--slider .apx-glider { transition: none; }
+}

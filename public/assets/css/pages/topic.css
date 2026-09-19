@@ -1,0 +1,28 @@
+/* APX · 话题页 */
+.apx-topic-head { padding:20px; display:flex; flex-direction:column; gap:10px; margin-bottom:16px; }
+.apx-topic-head__title { font-size:22px; font-weight:700; color:var(--text-strong); }
+.apx-topic-head__meta { display:flex; gap:18px; color:var(--text-muted); font-size:14px; }
+.apx-topic-head__meta b { color:var(--text-strong); }
+.apx-topic-head__actions { margin-top:4px; }
+
+/* 两栏页面骨架（所有内容页共用） */
+.apx-page { display:flex; gap:24px; align-items:flex-start; }
+.apx-page > .apx-main { padding:0; flex:1 1 auto; min-width:0; }
+.apx-page > .apx-side { width:320px; flex:none; position:sticky; top:84px; display:flex; flex-direction:column; gap:18px; }
+.apx-page .apx-feed { display:block; }
+.apx-side__block { padding:16px; }
+.apx-side__title { font-weight:600; color:var(--text-strong); margin-bottom:10px; font-size:var(--fs-sub); }
+.apx-user-row { display:flex; align-items:center; gap:10px; padding:8px 0; }
+.apx-user-row__meta { flex:1; min-width:0; }
+.apx-user-row__name { font-weight:500; color:var(--text-strong); text-decoration:none; display:block; }
+.apx-user-row__handle { font-size:12px; color:var(--text-faint); }
+.apx-topic-row { display:flex; align-items:center; justify-content:space-between; gap:10px; padding:7px 0; text-decoration:none; border-bottom:1px solid var(--border); }
+.apx-topic-row:last-child { border-bottom:none; }
+.apx-tags { display:flex; flex-wrap:wrap; gap:8px; }
+.apx-pill { display:inline-flex; align-items:center; padding:5px 12px; border-radius:var(--r-pill); background:var(--surface-2); color:var(--text-muted); font-size:13px; text-decoration:none; transition:.15s; }
+.apx-pill--solid { background:var(--primary-soft); color:var(--text-strong); font-weight:600; }
+.apx-pill:hover { background:var(--surface); }
+.apx-tabs { display:flex; gap:6px; border-bottom:1px solid var(--border); }
+.apx-tab { padding:10px 14px; border:none; background:none; color:var(--text-muted); font-weight:500; cursor:pointer; border-bottom:2px solid transparent; }
+.apx-tab.is-active { color:var(--text-strong); border-bottom-color:var(--primary); }
+@media (max-width:1080px){ .apx-page{flex-direction:column;} .apx-page > .apx-side{width:100%; position:static;} }

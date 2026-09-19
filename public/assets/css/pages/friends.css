@@ -1,0 +1,29 @@
+/* =====================================================================
+ * APX · Friends / relations page
+ * ===================================================================== */
+.apx-friends { max-width: 760px; margin: 0 auto; }
+.apx-friends__head { display: flex; align-items: center; justify-content: space-between; margin-bottom: 18px; }
+.apx-friends__title { font-size: 26px; font-weight: 700; color: var(--text-strong); }
+
+.apx-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 18px; border-bottom: 1px solid var(--border); }
+.apx-tab { padding: 10px 16px; color: var(--text-muted); cursor: pointer; border-bottom: 2px solid transparent; font-size: 14px; transition: color var(--dur-fast), border-color var(--dur-fast); }
+.apx-tab:hover { color: var(--text); }
+.apx-tab.is-active { color: var(--primary-text); border-bottom-color: var(--brand-1); font-weight: 600; }
+.apx-tab .apx-badge-dot { margin-left: 6px; }
+
+.apx-tabpanel { display: none; animation: apxFadeUp var(--dur) both; }
+.apx-tabpanel.is-active { display: block; }
+
+.apx-user-row { display: flex; align-items: center; gap: 12px; padding: 12px 14px; border-radius: var(--r-md); transition: background var(--dur-fast); }
+.apx-user-row:hover { background: var(--surface-2); }
+.apx-user-row + .apx-user-row { border-top: 1px solid var(--border); }
+.apx-user-row__body { flex: 1; min-width: 0; }
+.apx-user-row__name { font-weight: 600; color: var(--text-strong); display: flex; align-items: center; gap: 8px; }
+.apx-user-row__sub { color: var(--text-muted); font-size: 13px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.apx-user-row__msg { color: var(--text-faint); font-size: 13px; margin-top: 2px; }
+.apx-user-row__actions { display: flex; gap: 8px; flex-shrink: 0; }
+
+.apx-pill { display: inline-flex; align-items: center; font-size: 11px; padding: 2px 8px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-text); }
+.apx-pill--special { background: linear-gradient(135deg, var(--brand-2), var(--brand-3)); color: #fff; }
+
+.apx-requests-empty, .apx-friends-empty { text-align: center; color: var(--text-faint); padding: 48px 0; }

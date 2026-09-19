@@ -1,0 +1,34 @@
+/* =====================================================================
+ * APX · Auth pages
+ * ===================================================================== */
+.apx-auth__card h1 { font-size: var(--fs-display); margin-bottom: 6px; }
+.apx-auth__card .apx-sub { color: var(--text-muted); margin-bottom: 26px; }
+.apx-auth__divider { display: flex; align-items: center; gap: 12px; color: var(--text-faint); font-size: var(--fs-xs); margin: 18px 0; }
+.apx-auth__divider::before, .apx-auth__divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
+.apx-auth__alt { text-align: center; margin-top: 18px; color: var(--text-muted); font-size: var(--fs-sm); }
+.apx-auth__alt a { font-weight: 600; }
+
+/* captcha row */
+.apx-captcha-row { display: flex; gap: 10px; align-items: center; }
+.apx-captcha-row .apx-input { flex: 1; }
+.apx-captcha-img { height: 46px; border-radius: var(--r-xs); border: 1px solid var(--border); cursor: pointer; flex: none; background: var(--surface-2); }
+
+/* ---------- UI Kit：浮动标签输入框（.apx-field--wave）在认证卡内的适配 ---------- */
+.apx-auth__card .apx-field--wave { margin-bottom: 20px; }
+.apx-auth__card .apx-field--wave .apx-input { font-size: var(--fs-body); }
+.apx-auth__card .apx-field--wave .apx-field__error { margin-top: 6px; }
+.apx-auth__card .apx-field--wave + .apx-btn { margin-top: 6px; }
+/* 浮动标签内的密码强度条：紧贴下划线，避免与浮动标签抢位 */
+.apx-field--wave .apx-pwd-strength { margin-top: 8px; }
+
+/* 密码可见性切换按钮（wave 字段内右侧，固定对齐输入行） */
+.apx-field--wave.apx-field--pwd .apx-input { padding-right: 44px; }
+.apx-field--wave .apx-field__toggle {
+  position: absolute; right: 2px; top: 24px; transform: translateY(-50%);
+  width: 34px; height: 34px; border-radius: var(--r-xs);
+  display: inline-flex; align-items: center; justify-content: center;
+  color: var(--text-faint); background: transparent; border: none; cursor: pointer;
+  transition: color var(--dur-fast) var(--ease-out), background var(--dur-fast);
+}
+.apx-field--wave .apx-field__toggle:hover { color: var(--text); background: var(--surface-3); }
+.apx-field--wave .apx-field__toggle svg { width: 18px; height: 18px; }

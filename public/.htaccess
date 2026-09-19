@@ -1,0 +1,12 @@
+# APX · Apache 配置（web 根指向 public/ 时生效，推荐、更安全）
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # 已存在的真实文件或目录直接放行（assets 静态资源）
+    RewriteCond %{REQUEST_FILENAME} -f [OR]
+    RewriteCond %{REQUEST_FILENAME} -d
+    RewriteRule ^ - [L]
+
+    # 其余未知路径交给前端控制器（干净 URL：/login、/home ...）
+    RewriteRule ^ index.php [L]
+</IfModule>

@@ -1,0 +1,131 @@
+/* =====================================================================
+ * APX · Three-layer design tokens
+ * Layer 0: base palette   Layer 1: semantic tokens   Layer 2: component tokens
+ * Themes (css/themes.css) only override layer 0/1 brand vars.
+ * Component layer (components.css) references semantic tokens only.
+ * ===================================================================== */
+
+/* ---- Layer 0: base raw palette (brand defaults) ---- */
+:root {
+  /* brand defaults (graphite / indigo) */
+  --brand-1: #6366F1;
+  --brand-2: #8B5CF6;
+  --brand-3: #22D3EE;
+  --brand-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 55%, #22D3EE 120%);
+  --brand-glow-1: rgba(99, 102, 241, 0.35);
+  --brand-glow-2: rgba(139, 92, 246, 0.28);
+  --brand-glow-3: rgba(34, 211, 238, 0.22);
+
+  /* functional */
+  --c-success: #34D399;
+  --c-warning: #FBBF24;
+  --c-danger: #F87171;
+  --c-info: #60A5FA;
+
+  /* motion */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
+  --dur-fast: 0.16s;
+  --dur: 0.26s;
+  --dur-slow: 0.45s;
+
+  /* radii */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 30px;
+  --r-pill: 999px;
+
+  /* type */
+  --font-sans: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+  --fs-display: 30px;
+  --fs-h1: 24px;
+  --fs-h2: 19px;
+  --fs-sub: 17px;
+  --fs-body: 14px;
+  --fs-sm: 13px;
+  --fs-xs: 12px;
+}
+
+/* ---- Layer 1: semantic tokens, dark mode (default) ---- */
+[data-apx-mode="dark"] {
+  --bg: #0E1116;
+  --bg-2: #0A0D11;
+  --bg-grad: radial-gradient(1200px 600px at 12% -8%, rgba(99,102,241,0.16), transparent 60%),
+             radial-gradient(1000px 520px at 100% 0%, rgba(34,211,238,0.10), transparent 55%);
+  --surface: #151A21;
+  --surface-2: #1B222C;
+  --surface-3: #232C39;
+  --surface-solid: #151A21;
+  --text: #E8ECF2;
+  --text-muted: #9AA5B4;
+  --text-faint: #6B7686;
+  --text-strong: #FFFFFF;
+  --on-brand: #FFFFFF;
+
+  --border: rgba(255, 255, 255, 0.08);
+  --border-strong: rgba(255, 255, 255, 0.14);
+  --glass: rgba(21, 26, 33, 0.72);
+  --glass-2: rgba(27, 34, 44, 0.62);
+  --glass-border: rgba(255, 255, 255, 0.10);
+
+  --shadow-1: 0 1px 2px rgba(0,0,0,0.40), 0 2px 8px rgba(0,0,0,0.28);
+  --shadow-2: 0 6px 20px rgba(0,0,0,0.38), 0 12px 40px rgba(0,0,0,0.30);
+  --shadow-3: 0 18px 50px rgba(0,0,0,0.50);
+
+  --skeleton: linear-gradient(100deg, rgba(255,255,255,0.04) 30%, rgba(255,255,255,0.10) 50%, rgba(255,255,255,0.04) 70%);
+}
+
+/* ---- Layer 1: semantic tokens, light mode ---- */
+[data-apx-mode="light"] {
+  --bg: #EEF1F8;
+  --bg-2: #E4E9F2;
+  --bg-grad: radial-gradient(1200px 600px at 12% -8%, rgba(99,102,241,0.14), transparent 60%),
+             radial-gradient(1000px 520px at 100% 0%, rgba(34,211,238,0.10), transparent 55%);
+  --surface: #FFFFFF;
+  --surface-2: #F5F7FB;
+  --surface-3: #ECEFF6;
+  --surface-solid: #FFFFFF;
+  --text: #1A1F27;
+  --text-muted: #5A6573;
+  --text-faint: #8A93A3;
+  --text-strong: #0E1116;
+  --on-brand: #FFFFFF;
+
+  --border: rgba(15, 23, 42, 0.10);
+  --border-strong: rgba(15, 23, 42, 0.16);
+  --glass: rgba(255, 255, 255, 0.74);
+  --glass-2: rgba(255, 255, 255, 0.58);
+  --glass-border: rgba(15, 23, 42, 0.10);
+
+  --shadow-1: 0 1px 2px rgba(15,23,42,0.08), 0 2px 8px rgba(15,23,42,0.06);
+  --shadow-2: 0 6px 20px rgba(15,23,42,0.10), 0 12px 40px rgba(15,23,42,0.08);
+  --shadow-3: 0 18px 50px rgba(15,23,42,0.14);
+
+  --skeleton: linear-gradient(100deg, rgba(15,23,42,0.04) 30%, rgba(15,23,42,0.10) 50%, rgba(15,23,42,0.04) 70%);
+}
+
+/* brand tokens mapped to semantic (default = graphite) */
+:root,
+[data-apx-mode] {
+  --primary: var(--brand-1);
+  --primary-2: var(--brand-2);
+  --accent: var(--brand-3);
+  --primary-grad: var(--brand-gradient);
+  --glow-1: var(--brand-glow-1);
+  --glow-2: var(--brand-glow-2);
+  --glow-3: var(--brand-glow-3);
+  --success: var(--c-success);
+  --warning: var(--c-warning);
+  --danger: var(--c-danger);
+  --info: var(--c-info);
+
+  --primary-soft: color-mix(in srgb, var(--primary) 16%, transparent);
+  --primary-soft-2: color-mix(in srgb, var(--primary) 10%, transparent);
+}
+
+/* safe fallback when color-mix unsupported */
+@supports not (background: color-mix(in srgb, red, blue)) {
+  :root, [data-apx-mode] { --primary-soft: rgba(99,102,241,0.16); --primary-soft-2: rgba(99,102,241,0.10); }
+}

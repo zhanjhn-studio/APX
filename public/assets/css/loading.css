@@ -1,0 +1,125 @@
+/* =====================================================================
+ * APX · Loading & progress (cube spinner + cloud loader)
+ * 立方体 spinner 用于首屏 boot 遮罩与按钮内联；云朵 loader 用于内容/区块加载。
+ * ===================================================================== */
+
+/* ---------- 3D 立方体 spinner（首屏 boot / 内联） ---------- */
+.apx-spinner-3d {
+  --c1: var(--brand-1, #6366F1);
+  width: 44px; height: 44px;
+  position: relative;
+  transform-style: preserve-3d;
+  animation: apx-spin-3d 2s infinite ease;
+}
+.apx-spinner-3d > div {
+  position: absolute; inset: 0;
+  width: 100%; height: 100%;
+  background-color: color-mix(in srgb, var(--c1) 16%, transparent);
+  border: 2px solid var(--c1);
+  border-radius: 6px;
+}
+.apx-spinner-3d > div:nth-child(1) { transform: translateZ(-22px) rotateY(180deg); }
+.apx-spinner-3d > div:nth-child(2) { transform: rotateY(-270deg) translateX(50%); transform-origin: top right; }
+.apx-spinner-3d > div:nth-child(3) { transform: rotateY(270deg) translateX(-50%); transform-origin: center left; }
+.apx-spinner-3d > div:nth-child(4) { transform: rotateX(90deg) translateY(-50%); transform-origin: top center; }
+.apx-spinner-3d > div:nth-child(5) { transform: rotateX(-90deg) translateY(50%); transform-origin: bottom center; }
+.apx-spinner-3d > div:nth-child(6) { transform: translateZ(22px); }
+
+@keyframes apx-spin-3d {
+  0%   { transform: rotate(45deg) rotateX(-25deg) rotateY(25deg); }
+  50%  { transform: rotate(45deg) rotateX(-385deg) rotateY(25deg); }
+  100% { transform: rotate(45deg) rotateX(-385deg) rotateY(385deg); }
+}
+
+/* ---------- 云朵 loader（内容/区块加载） ---------- */
+.apx-loader-cloud {
+  --cloud-color: var(--brand-1, #6366F1);
+  --arrows-color: var(--brand-3, #22D3EE);
+  --time-animation: 1s;
+  display: inline-block;
+  transform: scale(1);
+}
+.apx-loader-cloud svg { display: block; width: 64px; height: 64px; }
+.apx-loader-cloud #cloud rect { fill: var(--cloud-color); }
+.apx-loader-cloud #cloud g:nth-child(3) {
+  transform-origin: 50% 72.8938%;
+  fill: var(--arrows-color);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--arrows-color) 60%, transparent));
+  animation: apx-cloud-rotation var(--time-animation) linear infinite;
+}
+.apx-loader-cloud #shapes g g circle {
+  animation: apx-cloud-float calc(var(--time-animation) * 2) linear infinite;
+}
+.apx-loader-cloud #shapes g g circle:nth-child(2) {
+  animation-delay: calc((var(--time-animation) * 2) / -3);
+}
+.apx-loader-cloud #shapes g g circle:nth-child(3) {
+  animation-delay: calc((var(--time-animation) * 2) / -1.5);
+}
+.apx-loader-cloud #lines g line {
+  stroke-width: 5;
+  transform-origin: 50% 50%;
+  rotate: -65deg;
+  animation: apx-cloud-lines calc(var(--time-animation) / 1.33) linear infinite;
+}
+
+@keyframes apx-cloud-rotation {
+  0%   { transform: rotate(0deg); }
+  50%  { transform: rotate(180deg); }
+  100% { transform: rotate(360deg); }
+}
+@keyframes apx-cloud-lines {
+  0%   { transform: translateY(-10px); }
+  100% { transform: translateY(8px); }
+}
+@keyframes apx-cloud-float {
+  0%   { cx: 20; cy: 60; r: 15; }
+  50%  { cx: 50; cy: 45; r: 20; }
+  100% { cx: 80; cy: 60; r: 15; }
+}
+
+/* ---------- 通用加载包裹 ---------- */
+.apx-loader {
+  display: flex; align-items: center; justify-content: center;
+  gap: 12px; padding: 28px; color: var(--text-muted); font-size: var(--fs-sm);
+}
+.apx-loader--block { min-height: 160px; }
+
+/* 覆盖在卡片之上（如登录提交中），不破坏原表单与事件 */
+.apx-card-loader {
+  position: absolute; inset: 0; z-index: 5;
+  display: flex; align-items: center; justify-content: center;
+  border-radius: inherit;
+  background: color-mix(in srgb, var(--surface) 78%, transparent);
+  backdrop-filter: blur(4px); -webkit-backdrop-filter: blur(4px);
+}
+.apx-auth__card { position: relative; }
+
+/* ---------- 首屏 boot 遮罩 ---------- */
+.apx-boot {
+  position: fixed; inset: 0; z-index: 999;
+  display: flex; align-items: center; justify-content: center;
+  background:
+    radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--brand-1, #6366F1) 16%, var(--bg, #0E1116)) 0%, var(--bg, #0E1116) 62%);
+  transition: opacity .45s var(--ease-out, ease), visibility .45s;
+  animation: apx-boot-fallback 6s forwards;
+}
+.apx-boot--hide { opacity: 0; visibility: hidden; pointer-events: none; }
+.apx-boot__inner { display: flex; flex-direction: column; align-items: center; gap: 18px; }
+.apx-boot__brand {
+  font-size: 20px; font-weight: 700; letter-spacing: .5px;
+  color: var(--text, #E8ECF2);
+  background: linear-gradient(120deg, var(--brand-1, #6366F1), var(--brand-3, #22D3EE));
+  -webkit-background-clip: text; background-clip: text; -webkit-text-fill-color: transparent;
+}
+@keyframes apx-boot-fallback {
+  0%, 85% { opacity: 1; }
+  100% { opacity: 0; visibility: hidden; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .apx-spinner-3d,
+  .apx-loader-cloud #cloud g:nth-child(3),
+  .apx-loader-cloud #shapes g g circle,
+  .apx-loader-cloud #lines g line { animation-duration: 2.4s; }
+}
