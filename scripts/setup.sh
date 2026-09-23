@@ -82,11 +82,11 @@ PHP_BASE="php"
 PHP_FPM="php-fpm"
 if [ "$FAMILY" = "debian" ]; then
   # 优先用发行版自带 PHP；低于 8.0 时启用 sury 源
-  $PKG_INSTALL nginx mariadb-server \
+  $PKG_INSTALL nginx mariadb-server redis-server \
     php php-fpm php-mysql php-gd php-mbstring php-xml php-zip php-curl php-intl php-bcmath php-opcache >/dev/null 2>&1 || true
   PHP_VER_NOW="$(php -r 'echo PHP_VERSION_ID;' 2>/dev/null || echo 0)"
-  if [ "${PHP_VER_NOW:-0}" -lt 80000 ]; then
-    echo "   PHP < 8.0，启用 sury 源..."
+  if [ "${PHP_VER_NOW:-0}" -lt 80100 ]; then
+    echo "   PHP < 8.1，启用 sury 源..."
     $PKG_INSTALL ca-certificates apt-transport-https lsb-release >/dev/null 2>&1 || true
     curl -fsSL https://packages.sury.org/php/README.txt -o /tmp/sury 2>/dev/null || true
     echo "deb https://packages.sury.org/php/ $(lsb_release -sc) main" > /etc/apt/sources.list.d/sury.list
@@ -101,7 +101,7 @@ elif [ "$FAMILY" = "rhel" ]; then
   $PKG_INSTALL epel-release >/dev/null 2>&1 || true
   VER="${PHP_VER:-8.2}"
   dnf module enable -y "php:$VER" >/dev/null 2>&1 || true
-  $PKG_INSTALL nginx mariadb-server php php-fpm php-mysqlnd php-gd php-mbstring \
+  $PKG_INSTALL nginx mariadb-server redis php php-fpm php-mysqlnd php-gd php-mbstring \
     php-xml php-zip php-curl php-intl php-bcmath php-opcache >/dev/null 2>&1 || true
   PHP_BASE="php"; PHP_FPM="php-fpm"
 fi
@@ -109,7 +109,7 @@ fi
 # 定位 php / php-fpm 可执行文件
 PHP_BIN="$(command -v "$PHP_BASE" || command -v php)"
 [ -z "$PHP_BIN" ] && { echo "✗ PHP 安装失败"; exit 1; }
-"$PHP_BIN" -r 'exit(PHP_VERSION_ID >= 80000 ? 0 : 1);' || { echo "✗ 需要 PHP 8.0+，当前 $("$PHP_BIN" -r 'echo PHP_VERSION;')"; exit 1; }
+"$PHP_BIN" -r 'exit(PHP_VERSION_ID >= 80100 ? 0 : 1);' || { echo "✗ 需要 PHP 8.1+，当前 $("$PHP_BIN" -r 'echo PHP_VERSION;')"; exit 1; }
 echo "   PHP: $("$PHP_BIN" -r 'echo PHP_VERSION;')"
 
 # 启动 PHP-FPM（systemd 单元名随发行版不同，兼容探测）
@@ -241,6 +241,16 @@ server {
 $ASSETS_LINE
     location ^~ /assets/uploads/ { location ~* \\\.php\$ { return 403; } try_files \$uri =404; }
 
+    # WebSocket 实时通道（bin/ws-server.php，由 apx-ws 服务托管；前端通过同源 /ws 连接）
+    location /ws {
+        proxy_pass http://127.0.0.1:8080;
+        proxy_http_version 1.1;
+        proxy_set_header Upgrade \$http_upgrade;
+        proxy_set_header Connection "upgrade";
+        proxy_set_header Host \$host;
+        proxy_read_timeout 3600s;
+    }
+
     location / { try_files \$uri \$uri/ /index.php?\$query_string; }
 
     location ~ \\.php\$ {
@@ -270,6 +280,46 @@ mkdir -p storage/uploads storage/logs storage/cache
 chown -R "$WEB_USER" storage 2>/dev/null || true
 chmod -R 755 storage
 chmod -R 775 storage/uploads storage/logs storage/cache
+
+# ---------- 8) 实时与队列服务（WebSocket / 异步队列，可选） ----------
+echo "• [8/8] 配置实时与队列服务（WebSocket / 队列）..."
+# Composer 依赖（v2：predis/monolog/ratchet）。缺失时自动回退 SSE/同步模式。
+if command -v composer >/dev/null 2>&1; then
+  echo "   composer install --no-dev ..."
+  COMPOSER_ALLOW_SUPERUSER=1 composer install --no-interaction --no-dev 2>&1 | tail -4 || echo "   (composer install 失败，WebSocket/队列将不可用，已自动回退 SSE/同步模式)"
+else
+  echo "   ⚠ 未找到 composer，跳过 vendor 安装；WebSocket/队列不可用，已自动回退 SSE/同步模式。"
+  echo "     如需启用：在该目录运行 composer install 后启动 bin/ws-server.php 与 bin/worker.php"
+fi
+
+# Redis 服务
+REDIS_OK=0
+if command -v redis-server >/dev/null 2>&1; then
+  systemctl enable redis-server 2>/dev/null || systemctl enable redis 2>/dev/null || true
+  systemctl start redis-server 2>/dev/null || systemctl start redis 2>/dev/null || true
+  REDIS_OK=1
+fi
+
+# systemd 单元（WebSocket + 队列 worker），仅在 Redis 已安装且 vendor 存在时启用
+if [ -d /etc/systemd/system ] && [ "$REDIS_OK" -eq 1 ] && [ -f vendor/autoload.php ]; then
+  WEB_USER_DETECTED="www-data"
+  command -v nginx >/dev/null 2>&1 && WEB_USER_DETECTED="$(ps axo user,comm | awk '$2=="nginx"{print $1; exit}')"
+  [ "$WEB_USER_DETECTED" = "root" ] && WEB_USER_DETECTED="www-data"
+  for svc in ws worker; do
+    if [ -f "systemd/apx-$svc.service" ]; then
+      sed -e "s#/var/www/apx#$APX_DIR#g" -e "s#User=www-data#User=$WEB_USER_DETECTED#" -e "s#Group=www-data#Group=$WEB_USER_DETECTED#" \
+        "systemd/apx-$svc.service" > "/etc/systemd/system/apx-$svc.service" 2>/dev/null || true
+    fi
+  done
+  systemctl daemon-reload 2>/dev/null || true
+  systemctl enable apx-ws apx-worker 2>/dev/null || true
+  systemctl start apx-ws apx-worker 2>/dev/null || true
+  echo "   WebSocket / 队列服务已启用（apx-ws / apx-worker）。"
+else
+  echo "   未启用 systemd 单元（Redis 未安装或 vendor 缺失），如需可手动常驻："
+  echo "     php bin/ws-server.php   # 终端常驻"
+  echo "     php bin/worker.php      # 终端常驻"
+fi
 
 # ---------- 完成 ----------
 echo ""

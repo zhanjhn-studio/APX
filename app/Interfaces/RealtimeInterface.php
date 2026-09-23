@@ -13,4 +13,7 @@ interface RealtimeInterface
 
     /** 取出并清空该用户的待推送事件（SSE 与轮询共用）。 */
     public static function drain(int $userId): array;
+
+    /** 该用户是否处于真实连接态（WS 实现返回真实连接，回退实现返回 false）。 */
+    public static function online(int $userId): bool;
 }

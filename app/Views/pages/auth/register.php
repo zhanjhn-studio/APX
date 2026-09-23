@@ -2,8 +2,10 @@
 use App\Core\Config;
 $mode = Config::get('app.register_mode', 'open');
 ?>
-<h1><?= __('auth.register.title') ?></h1>
-<p class="apx-sub"><?= __('auth.register.subtitle') ?></p>
+<div class="apx-auth__head">
+  <h1><?= __('auth.register.title') ?></h1>
+  <p class="apx-sub"><?= __('auth.register.subtitle') ?></p>
+</div>
 
 <form action="<?= route('/register') ?>" method="post" data-apx-submit data-success-redirect="<?= route('/home') ?>" novalidate>
   <?= csrf_field() ?>
@@ -46,7 +48,8 @@ $mode = Config::get('app.register_mode', 'open');
 </form>
 
 <div class="apx-auth__alt">
-  <?= __('auth.has_account') ?> <a href="<?= route('/login') ?>"><?= __('auth.to_login') ?></a>
+  <?= __('auth.has_account') ?>
+  <a href="<?= route('/login') ?>"><?= __('auth.to_login') ?></a>
 </div>
 
 <script type="module">

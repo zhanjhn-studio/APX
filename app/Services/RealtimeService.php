@@ -6,9 +6,9 @@ use App\Core\Cache;
 use App\Interfaces\RealtimeInterface;
 
 /**
- * 实时事件队列（当前实现：文件缓存 + SSE/轮询）。
+ * 实时事件队列（SSE 文件队列回退实现）。
  * 每个用户一个定长队列（保留最近 50 条，10 分钟过期），SSE 与轮询各自 drain 一次即可送达。
- * 接入 WebSocket 时替换本实现即可，业务层只依赖 RealtimeInterface。
+ * v2 起作为 realtime_driver=sse 的回退实现；WebSocket 场景由 RedisRealtimeService 承担。
  */
 class RealtimeService implements RealtimeInterface
 {
@@ -54,5 +54,11 @@ class RealtimeService implements RealtimeInterface
     private static function key(int $userId): string
     {
         return 'rt_queue:' . $userId;
+    }
+
+    /** 文件队列实现无法判断真实连接态，统一返回 false。 */
+    public static function online(int $userId): bool
+    {
+        return false;
     }
 }

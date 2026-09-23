@@ -91,7 +91,7 @@
 .apx-side-group:last-child { border-bottom: none; }
 .apx-side-group__avatar {
   width: 30px; height: 30px; border-radius: var(--r-xs); flex: none; overflow: hidden;
-  background: var(--primary-grad); color: #fff; display: inline-flex; align-items: center; justify-content: center;
+  background: var(--primary-grad); color: var(--on-brand); display: inline-flex; align-items: center; justify-content: center;
   font-size: 13px; font-weight: 600;
 }
 .apx-side-group__avatar img { width: 100%; height: 100%; object-fit: cover; }

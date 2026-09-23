@@ -2,12 +2,15 @@
 declare(strict_types=1);
 namespace App\Controllers;
 
+use App\Core\Config;
 use App\Core\JsonResponse;
+use App\Core\Redis;
 use App\Core\Request;
 use App\Services\AuthService;
 use App\Services\MessageService;
 use App\Services\NotificationService;
 use App\Services\RealtimeService;
+use App\Services\RealtimeTicketService;
 
 /**
  * 实时事件通道（SSE + 轮询回退）。事件源统一来自 RealtimeService（RealtimeInterface 实现），
@@ -53,6 +56,20 @@ class EventsController
             sleep(3);
         }
         exit;
+    }
+
+    /** 签发 WebSocket 连接票据（仅当 realtime_driver=ws 且 Redis 可用时返回非空 token）。 */
+    public function ticket(Request $req): void
+    {
+        $uid = (int) AuthService::userId();
+        $token = '';
+        if ((string) Config::get('app.realtime_driver', 'sse') === 'ws' && Redis::instance()->available()) {
+            $token = RealtimeTicketService::issue($uid);
+        }
+        JsonResponse::ok([
+            'token' => $token,
+            'ws'    => Config::get('websocket.url', ''),
+        ], 'ok');
     }
 
     /** 轮询回退：返回增量事件与未读计数，供前端更新徽标与提示。 */

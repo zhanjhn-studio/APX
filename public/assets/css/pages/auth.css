@@ -1,27 +1,121 @@
 /* =====================================================================
- * APX · Auth pages
+ * APX · Auth pages — aurora background + glass card + brand hero
  * ===================================================================== */
-.apx-auth__card h1 { font-size: var(--fs-display); margin-bottom: 6px; }
-.apx-auth__card .apx-sub { color: var(--text-muted); margin-bottom: 26px; }
-.apx-auth__divider { display: flex; align-items: center; gap: 12px; color: var(--text-faint); font-size: var(--fs-xs); margin: 18px 0; }
-.apx-auth__divider::before, .apx-auth__divider::after { content: ""; flex: 1; height: 1px; background: var(--border); }
-.apx-auth__alt { text-align: center; margin-top: 18px; color: var(--text-muted); font-size: var(--fs-sm); }
-.apx-auth__alt a { font-weight: 600; }
 
-/* captcha row */
-.apx-captcha-row { display: flex; gap: 10px; align-items: center; }
+/* ---------- 全屏极光背景（固定层，不随滚动重绘） ---------- */
+.apx-auth__bg {
+  position: fixed; inset: 0; z-index: 0; pointer-events: none;
+  background:
+    radial-gradient(1100px 520px at 12% -10%, var(--glow-1), transparent 60%),
+    radial-gradient(900px 480px at 100% 0%, var(--glow-3), transparent 55%),
+    radial-gradient(820px 620px at 50% 120%, var(--glow-2), transparent 60%),
+    var(--bg);
+}
+.apx-auth__bg::before,
+.apx-auth__bg::after {
+  content: ""; position: absolute; border-radius: 50%;
+  filter: blur(70px); opacity: .32;
+}
+.apx-auth__bg::before {
+  width: 42vw; height: 42vw; left: -8vw; top: -6vw;
+  background: radial-gradient(circle, var(--brand-1), transparent 65%);
+  animation: apx-aurora 18s var(--ease-smooth) infinite alternate;
+}
+.apx-auth__bg::after {
+  width: 38vw; height: 38vw; right: -6vw; bottom: -8vw;
+  background: radial-gradient(circle, var(--brand-3), transparent 65%);
+  animation: apx-aurora 22s var(--ease-smooth) infinite alternate-reverse;
+}
+@keyframes apx-aurora {
+  from { transform: translate3d(0, 0, 0) scale(1); }
+  to   { transform: translate3d(3vw, 2vw, 0) scale(1.12); }
+}
+
+/* ---------- 布局：英雄区 + 表单卡 ---------- */
+.apx-auth {
+  position: relative; z-index: 1;
+  min-height: 100vh; min-height: 100dvh;
+  display: flex; align-items: center; justify-content: center;
+  gap: 64px; padding: 44px 24px;
+}
+.apx-auth__hero {
+  width: 380px; max-width: 40vw;
+  display: flex; flex-direction: column; gap: 16px;
+  animation: apx-rise var(--dur-slow) var(--ease-out) both;
+}
+.apx-auth__logo { display: flex; align-items: center; gap: 12px; }
+.apx-auth__logo svg { width: 40px; height: 40px; }
+.apx-auth__brand { font-size: 22px; font-weight: 800; letter-spacing: .5px; }
+.apx-auth__hero-title { font-size: var(--fs-hero); line-height: 1.06; letter-spacing: var(--tracking-tighter); margin: 6px 0 0; }
+.apx-auth__hero-sub { color: var(--text-muted); font-size: var(--fs-sub); margin: 0; }
+.apx-auth__features { display: flex; flex-direction: column; gap: 12px; margin: 6px 0 0; }
+.apx-auth__feature { display: flex; align-items: center; gap: 10px; color: var(--text-muted); font-size: var(--fs-sm); }
+.apx-auth__feature .dot {
+  width: 8px; height: 8px; border-radius: 50%; flex: none;
+  background: var(--primary); box-shadow: 0 0 10px var(--glow-1);
+}
+.apx-auth__hero-foot { margin-top: auto; color: var(--text-faint); font-size: var(--fs-xs); }
+
+.apx-auth__form { display: flex; align-items: center; justify-content: center; }
+
+/* ---------- 玻璃卡片（浮层，允许毛玻璃） ---------- */
+.apx-auth__card.apx-glass {
+  position: relative;
+  width: clamp(320px, 92vw, 420px);
+  padding: 44px 40px;
+  border-radius: var(--r-lg);
+  background: var(--glass);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
+  backdrop-filter: blur(22px) saturate(180%);
+  border: 1px solid var(--glass-border);
+  box-shadow: var(--shadow-2), inset 0 1px 0 var(--surface-3);
+}
+@supports not (backdrop-filter: blur(1px)) {
+  .apx-auth__card.apx-glass { background: var(--surface); }
+}
+
+/* ---------- 卡片内部 ---------- */
+.apx-auth__head { margin-bottom: 24px; }
+.apx-auth__card h1 { font-size: var(--fs-h1); margin: 0 0 6px; }
+.apx-auth__card .apx-sub { color: var(--text-muted); margin: 0; font-size: var(--fs-sm); }
+
+.apx-auth__card .apx-field--wave { margin-bottom: 18px; }
+.apx-auth__card .apx-field--wave .apx-input { font-size: var(--fs-body); }
+.apx-auth__card .apx-field--wave .apx-field__error { margin-top: 6px; }
+.apx-auth__card .apx-field--wave + .apx-btn { margin-top: 4px; }
+
+/* 记住我 + 忘记密码 一行 */
+.apx-auth__row {
+  display: flex; align-items: center; justify-content: space-between;
+  margin: 2px 0 18px;
+}
+.apx-auth__row .apx-btn--link { font-size: var(--fs-sm); padding: 0; height: auto; }
+
+/* 底部跳转链接 */
+.apx-auth__alt { text-align: center; margin-top: 22px; color: var(--text-muted); font-size: var(--fs-sm); }
+.apx-auth__alt a { font-weight: 600; color: var(--primary); }
+
+/* 密码强度条 */
+.apx-pwd-strength {
+  margin-top: 10px; height: 4px; border-radius: var(--r-pill);
+  background: var(--surface-3); overflow: hidden;
+}
+.apx-pwd-strength i {
+  display: block; height: 100%; width: 0; border-radius: inherit;
+  transition: width var(--dur) var(--ease-out), background var(--dur);
+}
+.apx-pwd-strength.lvl-0 i { width: 20%;  background: var(--danger); }
+.apx-pwd-strength.lvl-1 i { width: 40%;  background: var(--danger); }
+.apx-pwd-strength.lvl-2 i { width: 65%;  background: var(--warning); }
+.apx-pwd-strength.lvl-3 i { width: 85%;  background: var(--c-info); }
+.apx-pwd-strength.lvl-4 i { width: 100%; background: var(--success); }
+
+/* 验证码行（captcha partial 使用） */
+.apx-captcha-row { display: flex; gap: 10px; align-items: center; margin-bottom: 18px; }
 .apx-captcha-row .apx-input { flex: 1; }
 .apx-captcha-img { height: 46px; border-radius: var(--r-xs); border: 1px solid var(--border); cursor: pointer; flex: none; background: var(--surface-2); }
 
-/* ---------- UI Kit：浮动标签输入框（.apx-field--wave）在认证卡内的适配 ---------- */
-.apx-auth__card .apx-field--wave { margin-bottom: 20px; }
-.apx-auth__card .apx-field--wave .apx-input { font-size: var(--fs-body); }
-.apx-auth__card .apx-field--wave .apx-field__error { margin-top: 6px; }
-.apx-auth__card .apx-field--wave + .apx-btn { margin-top: 6px; }
-/* 浮动标签内的密码强度条：紧贴下划线，避免与浮动标签抢位 */
-.apx-field--wave .apx-pwd-strength { margin-top: 8px; }
-
-/* 密码可见性切换按钮（wave 字段内右侧，固定对齐输入行） */
+/* 浮动标签输入框内的密码可见性按钮 */
 .apx-field--wave.apx-field--pwd .apx-input { padding-right: 44px; }
 .apx-field--wave .apx-field__toggle {
   position: absolute; right: 2px; top: 24px; transform: translateY(-50%);
@@ -32,3 +126,33 @@
 }
 .apx-field--wave .apx-field__toggle:hover { color: var(--text); background: var(--surface-3); }
 .apx-field--wave .apx-field__toggle svg { width: 18px; height: 18px; }
+
+/* ---------- 入场动画：卡片弹入 + 子项错落上浮 ---------- */
+.apx-auth__card > * { animation: apx-rise var(--dur) var(--ease-out) both; }
+.apx-auth__card > *:nth-child(1) { animation-delay: .05s; }
+.apx-auth__card > *:nth-child(2) { animation-delay: .10s; }
+.apx-auth__card > *:nth-child(3) { animation-delay: .15s; }
+.apx-auth__card > *:nth-child(4) { animation-delay: .20s; }
+.apx-auth__card > *:nth-child(5) { animation-delay: .25s; }
+.apx-auth__card > *:nth-child(n+6) { animation-delay: .30s; }
+@keyframes apx-rise {
+  from { opacity: 0; transform: translateY(12px); }
+  to   { opacity: 1; transform: none; }
+}
+
+/* ---------- 响应式：窄屏堆叠 ---------- */
+@media (max-width: 900px) {
+  .apx-auth { flex-direction: column; gap: 22px; padding: 28px 16px; }
+  .apx-auth__hero { max-width: 92vw; width: 100%; text-align: center; align-items: center; }
+  .apx-auth__features { display: none; }
+  .apx-auth__hero-foot { margin-top: 8px; }
+  .apx-auth__card.apx-glass { padding: 30px 22px; }
+}
+
+/* ---------- 降低动效偏好：关闭非必要动画 ---------- */
+@media (prefers-reduced-motion: reduce) {
+  .apx-auth__bg::before,
+  .apx-auth__bg::after { animation: none; }
+  .apx-auth__hero,
+  .apx-auth__card > * { animation: none; }
+}

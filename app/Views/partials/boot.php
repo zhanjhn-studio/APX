@@ -8,3 +8,4 @@ use App\Core\I18n;
     <div class="apx-boot__brand"><?= e(I18n::translate('app.name')) ?></div>
   </div>
 </div>
+<?= \App\Core\View::partial('icons') ?>

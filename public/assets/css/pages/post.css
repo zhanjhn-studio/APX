@@ -46,6 +46,27 @@
 .apx-post__action svg { width: 18px; height: 18px; }
 .apx-post__action .cnt { font-size: 13px; }
 
+/* 点赞按钮（Uiverse like-wrapper · mono 点阵药丸） */
+.apx-post__action[data-act="like"] {
+  --dot-bg: var(--surface-3); --dot-color: var(--border); --dot-size: 1px; --dot-space: 13px;
+  background-image:
+    linear-gradient(90deg, var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+    linear-gradient(var(--dot-bg) calc(var(--dot-space) - var(--dot-size)), transparent 1%) center / var(--dot-space) var(--dot-space),
+    var(--dot-color);
+  border-radius: 99px;
+  color: var(--text-muted);
+  padding: 6px 14px;
+}
+.apx-post__action[data-act="like"]:hover { background-color: var(--surface-2); color: var(--text); }
+.apx-post__action[data-act="like"].is-active { color: var(--danger); }
+.apx-post__action[data-act="like"].is-active svg { fill: currentColor; animation: apx-like-wiggle .5s ease-in-out; }
+@keyframes apx-like-wiggle {
+  0%, 100% { transform: rotate(0deg); }
+  25% { transform: rotate(-10deg); }
+  50% { transform: rotate(10deg); }
+  75% { transform: rotate(-10deg); }
+}
+
 .apx-link { color: var(--primary); text-decoration: none; }
 .apx-link:hover { text-decoration: underline; }
 .apx-topic-link { color: var(--primary); text-decoration: none; font-weight: 500; }

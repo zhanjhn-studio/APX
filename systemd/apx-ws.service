@@ -1,0 +1,19 @@
+[Unit]
+Description=APX WebSocket Realtime Server
+After=network.target redis.service
+Wants=redis.service
+
+[Service]
+Type=simple
+# 部署脚本 setup.sh 会把路径替换为实际安装目录与运行用户
+User=www-data
+Group=www-data
+WorkingDirectory=/var/www/apx
+ExecStart=/usr/bin/php /var/www/apx/bin/ws-server.php
+Restart=on-failure
+RestartSec=3
+StandardOutput=journal
+StandardError=journal
+
+[Install]
+WantedBy=multi-user.target

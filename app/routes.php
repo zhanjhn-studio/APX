@@ -19,6 +19,7 @@ return [
 
     ['GET',  '/',                 'HomeController@index',        ['auth']],
     ['GET',  '/home',             'HomeController@index',        ['auth']],
+    ['GET',  '/publish',          'HomeController@compose',      ['auth']],
 
     // 动态 API
     ['GET',  '/api/feed',         'PostController@feed',         ['auth']],
@@ -39,6 +40,7 @@ return [
     // 实时通道
     ['GET',  '/api/events',        'EventsController@stream',      ['auth']],
     ['GET',  '/api/events/poll',   'EventsController@poll',        ['auth']],
+    ['GET',  '/api/realtime/ticket','EventsController@ticket',      ['auth']],
 
     // 关注
     ['POST', '/api/follow',        'FollowController@toggle',     ['auth', 'csrf', 'rate']],

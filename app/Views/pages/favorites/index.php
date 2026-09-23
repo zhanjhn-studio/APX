@@ -32,8 +32,8 @@ foreach ($folders as $f) {
             <span class="apx-text-faint"><?= (int) $f['count'] ?></span>
           </a>
           <div class="apx-folder-row__ops">
-            <button class="apx-icon-btn" data-folder-rename="<?= (int) $f['id'] ?>" data-name="<?= e($f['name']) ?>" title="<?= e(__('favorite.rename')) ?>">✎</button>
-            <button class="apx-icon-btn" data-folder-delete="<?= (int) $f['id'] ?>" title="<?= e(__('favorite.delete_folder')) ?>">🗑</button>
+            <button class="apx-icon-btn" data-folder-rename="<?= (int) $f['id'] ?>" data-name="<?= e($f['name']) ?>" title="<?= e(__('favorite.rename')) ?>"><?= icon('edit', 18) ?></button>
+            <button class="apx-icon-btn" data-folder-delete="<?= (int) $f['id'] ?>" title="<?= e(__('favorite.delete_folder')) ?>"><?= icon('trash', 18) ?></button>
           </div>
         </div>
       <?php endforeach; ?>

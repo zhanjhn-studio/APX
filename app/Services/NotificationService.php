@@ -31,7 +31,7 @@ class NotificationService implements NotifierInterface
             'related_type' => $relatedType,
             'created_at' => now_utc(),
         ]);
-        RealtimeService::push($userId, 'notification', [
+        Realtime::push($userId, 'notification', [
             'type'         => $type,
             'actor_id'     => $actorId,
             'body'         => $body,
@@ -60,7 +60,7 @@ class NotificationService implements NotifierInterface
             'related_type' => $relatedType,
             'created_at' => now_utc(),
         ]);
-        RealtimeService::push($userId, 'notification', [
+        Realtime::push($userId, 'notification', [
             'type'         => 'system',
             'actor_id'     => null,
             'body'         => $payload,

@@ -2,6 +2,8 @@
 declare(strict_types=1);
 namespace App\Services;
 
+use App\Core\Cache;
+use App\Core\Config;
 use App\Core\Database;
 use App\Services\PostService;
 
@@ -32,17 +34,21 @@ class SearchService
         if ($q === '') {
             return ['posts' => [], 'users' => [], 'topics' => [], 'groups' => [], 'count' => 0];
         }
-        $posts = self::searchPosts($q, $viewerId, 0, $limit);
-        $users = self::searchUsers($q, $limit);
-        $topics = self::searchTopics($q, $limit);
-        $groups = self::searchGroups($q, $viewerId, $limit);
-        return [
-            'posts'  => $posts,
-            'users'  => $users,
-            'topics' => $topics,
-            'groups' => $groups,
-            'count'  => count($posts) + count($users) + count($topics) + count($groups),
-        ];
+        $ttl = (int) (Config::get('search.cache_ttl') ?? 60);
+        $key = 'search:overview:' . md5($q . '|' . $viewerId . '|' . $limit);
+        return Cache::remember($key, $ttl, function () use ($q, $viewerId, $limit): array {
+            $posts = self::searchPosts($q, $viewerId, 0, $limit);
+            $users = self::searchUsers($q, $limit);
+            $topics = self::searchTopics($q, $limit);
+            $groups = self::searchGroups($q, $viewerId, $limit);
+            return [
+                'posts'  => $posts,
+                'users'  => $users,
+                'topics' => $topics,
+                'groups' => $groups,
+                'count'  => count($posts) + count($users) + count($topics) + count($groups),
+            ];
+        });
     }
 
     /** 群组搜索：排除隐藏群与已解散群。 */
@@ -74,38 +80,45 @@ class SearchService
         if ($q === '' || mb_strlen($q) > 64) {
             return ['users' => [], 'topics' => [], 'groups' => [], 'total' => 0];
         }
-        $users = self::searchUsers($q, $limit);
-        $topics = self::searchTopics($q, $limit);
-        $groups = self::searchGroups($q, $viewerId, $limit);
-        return [
-            'users'  => array_map(fn($u) => [
-                'id' => (int) $u['id'], 'username' => $u['username'],
-                'nickname' => $u['nickname'], 'avatar' => $u['avatar'] ?? '',
-            ], $users),
-            'topics' => array_map(fn($t) => [
-                'id' => (int) $t['id'], 'name' => $t['name'], 'slug' => $t['slug'],
-                'post_count' => (int) $t['post_count'],
-            ], $topics),
-            'groups' => array_map(fn($g) => [
-                'id' => (int) $g['id'], 'name' => $g['name'], 'slug' => $g['slug'],
-                'avatar' => $g['avatar'] ?? '', 'member_count' => (int) $g['member_count'],
-            ], $groups),
-            'total'  => count($users) + count($topics) + count($groups),
-        ];
+        $ttl = (int) (Config::get('search.cache_ttl') ?? 60);
+        $key = 'search:suggest:' . md5($q . '|' . $viewerId . '|' . $limit);
+        return Cache::remember($key, $ttl, function () use ($q, $viewerId, $limit): array {
+            $users = self::searchUsers($q, $limit);
+            $topics = self::searchTopics($q, $limit);
+            $groups = self::searchGroups($q, $viewerId, $limit);
+            return [
+                'users'  => array_map(fn($u) => [
+                    'id' => (int) $u['id'], 'username' => $u['username'],
+                    'nickname' => $u['nickname'], 'avatar' => $u['avatar'] ?? '',
+                ], $users),
+                'topics' => array_map(fn($t) => [
+                    'id' => (int) $t['id'], 'name' => $t['name'], 'slug' => $t['slug'],
+                    'post_count' => (int) $t['post_count'],
+                ], $topics),
+                'groups' => array_map(fn($g) => [
+                    'id' => (int) $g['id'], 'name' => $g['name'], 'slug' => $g['slug'],
+                    'avatar' => $g['avatar'] ?? '', 'member_count' => (int) $g['member_count'],
+                ], $groups),
+                'total'  => count($users) + count($topics) + count($groups),
+            ];
+        });
     }
 
     /** 全站热门搜索词（按出现次数，取近期）。 */
     public static function hotKeywords(int $limit = 8): array
     {
-        return self::db()->fetchAll(
-            "SELECT keyword, COUNT(*) AS times, MAX(created_at) AS last_at
-             FROM search_history
-             WHERE keyword <> '' AND created_at > ?
-             GROUP BY keyword
-             ORDER BY times DESC, last_at DESC
-             LIMIT ?",
-            [date('Y-m-d H:i:s', time() - 30 * 86400), $limit]
-        );
+        $ttl = (int) (Config::get('search.cache_ttl') ?? 60);
+        return Cache::remember('search:hot:' . $limit, $ttl, function () use ($limit): array {
+            return self::db()->fetchAll(
+                "SELECT keyword, COUNT(*) AS times, MAX(created_at) AS last_at
+                 FROM search_history
+                 WHERE keyword <> '' AND created_at > ?
+                 GROUP BY keyword
+                 ORDER BY times DESC, last_at DESC
+                 LIMIT ?",
+                [date('Y-m-d H:i:s', time() - 30 * 86400), $limit]
+            );
+        });
     }
 
     public static function searchPosts(string $q, int $viewerId, int $before = 0, int $limit = 20): array

@@ -1,0 +1,7 @@
+{
+  "version": "2.0.0",
+  "released_at": "2026-09-19T12:00:00Z",
+  "notes": "v2：引入 Redis 统一缓存/实时/队列基础设施，新增 WebSocket 常驻进程（SSE/轮询回退），异步队列剥离邮件与缩略图重活，MySQL FULLTEXT 增强 + 热点搜索缓存，UI 苹果化与 View Transitions 局部视图交换；保留 v1 存量数据与幂等迁移向导。",
+  "download": "https://github.com/zhanjhn-studio/APX/releases/download/v2.0.0/apx-2.0.0.zip",
+  "migrations": ["2026_09_19_0001_add_fulltext_search.sql"]
+}

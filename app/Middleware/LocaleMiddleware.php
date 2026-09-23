@@ -43,13 +43,45 @@ class LocaleMiddleware
 
     private static function fromAccept(): ?string
     {
-        $h = $_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? '';
-        if (stripos($h, 'zh-tw') !== false || stripos($h, 'zh-hant') !== false) {
-            return 'zh-TW';
+        $h = trim((string) ($_SERVER['HTTP_ACCEPT_LANGUAGE'] ?? ''));
+        if ($h === '') {
+            return null;
         }
-        if (stripos($h, 'en') !== false) {
+        $parsed = [];
+        foreach (preg_split('/,\s*/', $h) ?: [] as $part) {
+            if (!preg_match('/^([a-zA-Z]{1,3})(?:-([a-zA-Z0-9]{1,8}))?/i', $part, $m)) {
+                continue;
+            }
+            $lang = strtolower($m[1]);
+            $region = isset($m[2]) ? strtolower($m[2]) : '';
+            $q = 1.0;
+            if (preg_match('/;\s*q\s*=\s*([0-9.]+)/i', $part, $qm)) {
+                $q = (float) $qm[1];
+            }
+            $parsed[] = ['lang' => $lang, 'region' => $region, 'q' => $q];
+        }
+        if ($parsed === []) {
+            return null;
+        }
+        // 按质量 q 降序，取第一个受支持的语言（不再做子串匹配，避免 zh-CN,en 被误判为英文）
+        usort($parsed, fn($a, $b) => $b['q'] <=> $a['q']);
+        foreach ($parsed as $p) {
+            $locale = self::mapLocale($p['lang'], $p['region']);
+            if ($locale !== null) {
+                return $locale;
+            }
+        }
+        return null;
+    }
+
+    private static function mapLocale(string $lang, string $region): ?string
+    {
+        if ($lang === 'zh') {
+            return ($region === 'tw' || $region === 'hant') ? 'zh-TW' : 'zh-CN';
+        }
+        if ($lang === 'en') {
             return 'en';
         }
-        return 'zh-CN';
+        return null;
     }
 }

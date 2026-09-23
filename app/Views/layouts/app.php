@@ -21,19 +21,19 @@ $initial = !empty($user['nickname']) ? mb_substr($user['nickname'], 0, 1) : (!em
       <span><?= e(I18n::translate('app.name')) ?></span>
     </a>
     <form class="apx-search" action="<?= route('/search') ?>" method="get" role="search">
-      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+      <?= icon('search', 18) ?>
       <input type="search" name="q" placeholder="<?= e(I18n::translate('search.placeholder')) ?>" aria-label="<?= e(I18n::translate('search.title')) ?>">
     </form>
     <div class="apx-topbar__actions">
       <button class="apx-icon-btn" id="apx-theme-toggle" title="<?= e(I18n::translate('theme.name.graphite')) ?>" onclick="apxThemeMenu(event)">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"/></svg>
+        <?= icon('moon', 20) ?>
       </button>
       <a class="apx-icon-btn" href="<?= route('/notifications') ?>" title="<?= e(I18n::translate('nav.notifications')) ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg>
+        <?= icon('bell', 20) ?>
         <span class="apx-badge-dot" id="apx-noti-count" style="display:none">0</span>
       </a>
       <a class="apx-icon-btn" href="<?= route('/messages') ?>" title="<?= e(I18n::translate('nav.messages')) ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg>
+        <?= icon('message', 20) ?>
         <span class="apx-badge-dot" id="apx-msg-count" style="display:none">0</span>
       </a>
       <button class="apx-avatar-btn" data-apx-menu-trigger="apx-user-menu">
@@ -54,18 +54,18 @@ $initial = !empty($user['nickname']) ? mb_substr($user['nickname'], 0, 1) : (!em
 
   <aside class="apx-sidebar">
     <nav class="apx-nav">
-      <a class="apx-nav__item" href="<?= route('/home') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.home')) ?></span></a>
-      <a class="apx-nav__item" href="<?= route('/discover') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 6-4 2 2-6Z"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.discover')) ?></span></a>
-      <a class="apx-nav__item" href="<?= route('/messages') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.messages')) ?></span></a>
-      <a class="apx-nav__item" href="<?= route('/friends') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/><path d="M16 5.5a3 3 0 0 1 0 5.8"/><path d="M17 20a6 6 0 0 0-3-5.2"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.friends')) ?></span></a>
-      <a class="apx-nav__item" href="<?= route('/groups') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="8" cy="9" r="2.6"/><circle cx="16" cy="9" r="2.6"/><path d="M3 19a5 5 0 0 1 10 0"/><path d="M11 19a5 5 0 0 1 10 0"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.groups')) ?></span></a>
-      <a class="apx-nav__item" href="<?= route('/notifications') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 8a6 6 0 0 1 12 0c0 7 3 9 3 9H3s3-2 3-9"/><path d="M10.3 21a1.94 1.94 0 0 0 3.4 0"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.notifications')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/home') ?>"><?= icon('home', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.home')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/discover') ?>"><?= icon('compass', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.discover')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/messages') ?>"><?= icon('message', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.messages')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/friends') ?>"><?= icon('users', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.friends')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/groups') ?>"><?= icon('group', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.groups')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/notifications') ?>"><?= icon('bell', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.notifications')) ?></span></a>
       <div class="apx-nav__section"><?= e(I18n::translate('nav.profile')) ?></div>
-      <a class="apx-nav__item" href="<?= route('/profile') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.profile')) ?></span></a>
-      <a class="apx-nav__item" href="<?= route('/settings') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.6 1.6 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.6 1.6 0 0 0-2.7 1.1V21a2 2 0 1 1-4 0v-.1A1.6 1.6 0 0 0 6.6 19l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1A1.6 1.6 0 0 0 3 13.4H3a2 2 0 1 1 0-4h.1A1.6 1.6 0 0 0 4.6 6.6l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1A1.6 1.6 0 0 0 10 4.6V4a2 2 0 1 1 4 0v.1a1.6 1.6 0 0 0 2.7 1.1l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.6 1.6 0 0 0-.3 1.8Z"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.settings')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/profile') ?>"><?= icon('user', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.profile')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/settings') ?>"><?= icon('settings', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.settings')) ?></span></a>
       <?php if (!empty($user['role_level']) && $user['role_level'] >= 100): ?>
       <div class="apx-nav__section"><?= e(I18n::translate('nav.admin')) ?></div>
-      <a class="apx-nav__item" href="<?= route('/admin') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 2 4 6v6c0 5 3.4 8.5 8 10 4.6-1.5 8-5 8-10V6Z"/><path d="m9 12 2 2 4-4"/></svg><span class="apx-nav__label"><?= e(I18n::translate('nav.admin')) ?></span></a>
+      <a class="apx-nav__item" href="<?= route('/admin') ?>"><?= icon('shield', 20) ?><span class="apx-nav__label"><?= e(I18n::translate('nav.admin')) ?></span></a>
       <?php endif; ?>
     </nav>
     <div class="apx-sidebar__foot apx-text-faint" style="font-size:12px;">APX · v<?= e(Config::get('app.version', '1.0.0')) ?></div>
@@ -102,11 +102,11 @@ $initial = !empty($user['nickname']) ? mb_substr($user['nickname'], 0, 1) : (!em
   </main>
 
   <nav class="apx-bottom-nav">
-    <a href="<?= route('/home') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 10.5 12 3l9 7.5"/><path d="M5 9.5V21h14V9.5"/></svg><span><?= e(I18n::translate('nav.home')) ?></span></a>
-    <a href="<?= route('/discover') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="m15 9-2 6-4 2 2-6Z"/></svg><span><?= e(I18n::translate('nav.discover')) ?></span></a>
-    <a href="<?= route('/messages') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2Z"/></svg><span><?= e(I18n::translate('nav.messages')) ?></span><span class="apx-badge-dot" id="apx-msg-count-m" style="display:none">0</span></a>
-    <a href="<?= route('/friends') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="8" r="3.2"/><path d="M3 20a6 6 0 0 1 12 0"/></svg><span><?= e(I18n::translate('nav.friends')) ?></span></a>
-    <a href="<?= route('/profile') ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="3.5"/><path d="M5 20a7 7 0 0 1 14 0"/></svg><span><?= e(I18n::translate('nav.profile')) ?></span></a>
+    <a href="<?= route('/home') ?>"><?= icon('home', 22) ?><span><?= e(I18n::translate('nav.home')) ?></span></a>
+    <a href="<?= route('/discover') ?>"><?= icon('compass', 22) ?><span><?= e(I18n::translate('nav.discover')) ?></span></a>
+    <a href="<?= route('/messages') ?>"><?= icon('message', 22) ?><span><?= e(I18n::translate('nav.messages')) ?></span><span class="apx-badge-dot" id="apx-msg-count-m" style="display:none">0</span></a>
+    <a href="<?= route('/friends') ?>"><?= icon('users', 22) ?><span><?= e(I18n::translate('nav.friends')) ?></span></a>
+    <a href="<?= route('/profile') ?>"><?= icon('user', 22) ?><span><?= e(I18n::translate('nav.profile')) ?></span></a>
   </nav>
 
   <!-- Theme / appearance popover -->
@@ -135,5 +135,37 @@ $initial = !empty($user['nickname']) ? mb_substr($user['nickname'], 0, 1) : (!em
     document.querySelectorAll('.apx-menu.is-open').forEach(function(x){x.classList.remove('is-open');}); if(!open) m.classList.add('is-open'); }
 </script>
 <?= \App\Core\View::scripts([asset('js/modules/report.js')]) ?>
+<?= \App\Core\View::scripts([asset('js/nav.js')]) ?>
+
+  <!-- 悬浮发布按钮（Uiverse FAB · mono 自适应） -->
+  <div class="apx-fab" id="apx-fab" aria-label="<?= e(__('publish.title')) ?>">
+    <input type="checkbox" id="apx-fab-toggle" class="apx-fab__trigger">
+    <div class="apx-fab__subs">
+      <a href="<?= route('/publish', ['type' => 'text']) ?>" class="apx-fab__sub" title="<?= e(__('publish.type_text')) ?>"><?= icon('edit', 20) ?></a>
+      <a href="<?= route('/publish', ['type' => 'image']) ?>" class="apx-fab__sub" title="<?= e(__('publish.type_image')) ?>"><?= icon('image', 20) ?></a>
+      <a href="<?= route('/publish', ['type' => 'video']) ?>" class="apx-fab__sub" title="<?= e(__('publish.type_video')) ?>"><?= icon('video', 20) ?></a>
+      <a href="<?= route('/publish') ?>" class="apx-fab__sub" title="<?= e(__('publish.title')) ?>"><?= icon('comment', 20) ?></a>
+    </div>
+    <label for="apx-fab-toggle" class="apx-fab__main" title="<?= e(__('publish.title')) ?>">
+      <?= icon('plus', 24) ?>
+    </label>
+  </div>
+  <script>
+    // 发布页本身不再显示悬浮按钮
+    if (/(^|\/)publish(\.php)?($|\?)/.test(location.pathname + location.search)) {
+      var f = document.getElementById('apx-fab'); if (f) f.style.display = 'none';
+    }
+  </script>
+
+  <!-- Cookie 同意横幅（Uiverse 00Kubi） -->
+  <?= \App\Core\View::partial('cookie') ?>
+
+  <!-- 全局加载遮罩（Uiverse satyamchaudharydev 方块 spinner） -->
+  <div class="apx-loading" id="apxLoading"><div class="apx-spinner-blocks"></div></div>
+  <script>
+    window.APX = window.APX || {};
+    window.APX.showLoading = function () { var e = document.getElementById('apxLoading'); if (e) e.classList.add('is-on'); };
+    window.APX.hideLoading = function () { var e = document.getElementById('apxLoading'); if (e) e.classList.remove('is-on'); };
+  </script>
 </body>
 </html>

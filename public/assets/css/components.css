@@ -11,8 +11,10 @@
 }
 .apx-btn:active { transform: translateY(1px) scale(0.99); }
 .apx-btn svg { width: 18px; height: 18px; }
-.apx-btn--primary { background: var(--primary-grad); color: var(--on-brand); box-shadow: 0 6px 18px var(--glow-1); }
-.apx-btn--primary:hover { box-shadow: 0 10px 26px var(--glow-2); }
+.apx-btn--primary { background: var(--primary); color: var(--on-brand); border-radius: var(--r-pill); box-shadow: var(--shadow-1); }
+.apx-btn--primary:hover { box-shadow: var(--shadow-2); transform: translateY(-1px); filter: brightness(1.06); }
+.apx-btn--primary:active { transform: translateY(0) scale(0.99); filter: none; }
+.apx-btn:focus-visible { outline: none; box-shadow: 0 0 0 3px var(--primary-soft-2), var(--shadow-1); }
 .apx-btn--ghost { background: var(--surface-2); color: var(--text); border: 1px solid var(--border); }
 .apx-btn--ghost:hover { background: var(--surface-3); }
 .apx-btn--soft { background: var(--primary-soft); color: var(--text-strong); }
@@ -29,7 +31,7 @@
 .apx-field__label { display: block; font-size: var(--fs-sm); color: var(--text-muted); margin-bottom: 7px; font-weight: 500; }
 .apx-input, .apx-textarea, .apx-select {
   width: 100%; background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
-  border-radius: var(--r-sm); padding: 0 14px; height: 46px; transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+  border-radius: var(--r-sm); padding: 0 16px; height: 48px; transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
 }
 .apx-textarea { height: auto; padding: 12px 14px; resize: vertical; min-height: 96px; line-height: 1.55; }
 .apx-input:focus, .apx-textarea:focus, .apx-select:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft-2); }
@@ -53,8 +55,8 @@
 .apx-pwd-strength.lvl-4 > i { width: 100%; background: var(--success); }
 
 /* ---------- Cards ---------- */
-.apx-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: var(--shadow-1); padding: 18px; transition: box-shadow var(--dur), transform var(--dur), border-color var(--dur); }
-.apx-card--hover:hover { box-shadow: var(--shadow-2); transform: translateY(-2px); border-color: var(--border-strong); }
+.apx-card { background: var(--surface); border: 1px solid var(--border); border-radius: var(--r-md); box-shadow: var(--shadow-1), inset 0 1px 0 var(--border-strong); padding: 22px; transition: box-shadow var(--dur), transform var(--dur), border-color var(--dur); }
+.apx-card--hover:hover { box-shadow: var(--shadow-2), inset 0 1px 0 var(--border-strong); transform: translateY(-2px); border-color: var(--border-strong); }
 .apx-card--glass { background: var(--glass); backdrop-filter: blur(18px) saturate(140%); -webkit-backdrop-filter: blur(18px) saturate(140%); border: 1px solid var(--glass-border); }
 .apx-card__title { font-size: var(--fs-sub); font-weight: 600; color: var(--text-strong); margin-bottom: 4px; display: flex; align-items: center; gap: 8px; }
 .apx-card__hint { color: var(--text-muted); font-size: var(--fs-sm); }
@@ -136,3 +138,323 @@
 .apx-mode-seg { display: flex; gap: 6px; }
 .apx-mode-seg button { flex: 1; padding: 8px; border-radius: var(--r-xs); background: var(--surface-2); border: 1px solid var(--border); color: var(--text-muted); font-size: var(--fs-sm); }
 .apx-mode-seg button.is-active { background: var(--primary-soft); color: var(--text-strong); border-color: var(--primary); }
+
+/* ---------- 统一图标系统 ---------- */
+.apx-ico {
+  width: 20px; height: 20px; flex: none; display: inline-block; vertical-align: middle;
+  fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round;
+  transition: transform var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out);
+}
+.apx-ico--fill { fill: currentColor; stroke: none; }
+
+/* 黑白自适应 logo 标记 */
+.apx-logo-mark { color: var(--text-strong); }
+.apx-logo-mark .lm-bg { fill: currentColor; }
+.apx-logo-mark .lm-caret { fill: none; stroke: var(--bg); stroke-width: 3.4; stroke-linecap: round; stroke-linejoin: round; }
+.apx-logo-mark .lm-fill { fill: var(--bg); }
+
+/* ---------- 统一交互过渡（更顺滑） ---------- */
+.apx-btn, .apx-card, .apx-input, .apx-select, .apx-textarea, .apx-chip, .apx-badge,
+.apx-switch span, .apx-nav__item, .apx-icon-btn, .apx-menu__item, .apx-theme-swatch,
+.apx-avatar-btn, .apx-tab {
+  transition: background var(--dur-fast) var(--ease-out), color var(--dur-fast) var(--ease-out),
+              border-color var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast) var(--ease-out),
+              transform var(--dur-fast) var(--ease-out);
+}
+
+/* =====================================================================
+ * 统一 UI 组件库（Uiverse 风格 · 黑白自适应）
+ * 全部基于设计令牌，深/浅模式自动反色，hover/active 顺滑过渡。
+ * ===================================================================== */
+
+/* ---------- Alert 升级（左侧强调条 + 悬浮微动） ---------- */
+.apx-alert { align-items: center; transition: transform var(--dur-fast) var(--ease-out), background var(--dur-fast), box-shadow var(--dur-fast), border-color var(--dur-fast); }
+.apx-alert:hover { transform: translateY(-1px) scale(1.01); box-shadow: var(--shadow-2); }
+.apx-alert__icon { width: 22px; height: 22px; flex: none; }
+.apx-alert__body { font-size: var(--fs-sm); font-weight: 500; color: var(--text); }
+.apx-alert--success { border-left: 4px solid var(--success); }
+.apx-alert--danger  { border-left: 4px solid var(--danger); }
+.apx-alert--info    { border-left: 4px solid var(--info); }
+.apx-alert--warning { border-left: 4px solid var(--warning); }
+
+/* ---------- 内联加载 spinner（按钮内） ---------- */
+.apx-spinner { width: 18px; height: 18px; display: inline-block; }
+.apx-spinner svg { width: 100%; height: 100%; transform-origin: center; animation: apx-spin 2s linear infinite; }
+.apx-spinner circle { fill: none; stroke: currentColor; stroke-width: 3; stroke-dasharray: 1 200; stroke-dashoffset: 0; stroke-linecap: round; animation: apx-dash 1.5s ease-in-out infinite; }
+@keyframes apx-spin { 100% { transform: rotate(360deg); } }
+@keyframes apx-dash { 0% { stroke-dasharray: 1 200; stroke-dashoffset: 0; } 50% { stroke-dasharray: 90 200; stroke-dashoffset: -35px; } 100% { stroke-dashoffset: -125px; } }
+
+/* ---------- 悬浮发布按钮 FAB（展开子操作） ---------- */
+.apx-fab { position: fixed; right: 22px; bottom: 22px; z-index: 150; width: 60px; height: 60px; }
+.apx-fab__trigger { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-fab__main { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; width: 60px; height: 60px; border-radius: 50%; background: var(--primary); color: var(--on-brand); box-shadow: var(--shadow-2); cursor: pointer; transition: transform var(--dur-fast) var(--ease-out), box-shadow var(--dur-fast); }
+.apx-fab__main:hover { transform: scale(1.06); box-shadow: var(--shadow-3); }
+.apx-fab__main:active { transform: scale(0.94); }
+.apx-fab__main svg { width: 26px; height: 26px; transition: transform var(--dur) var(--ease-spring); }
+.apx-fab__trigger:checked ~ .apx-fab__main svg { transform: rotate(45deg); }
+.apx-fab__subs { position: absolute; right: 7px; bottom: 72px; display: flex; flex-direction: column-reverse; gap: 12px; align-items: center; }
+.apx-fab__sub { width: 46px; height: 46px; border-radius: 50%; background: var(--surface-solid); border: 1px solid var(--glass-border); color: var(--text); box-shadow: var(--shadow-2); display: flex; align-items: center; justify-content: center; font-size: 17px; text-decoration: none; opacity: 0; transform: scale(0.4) translateY(20px); pointer-events: none; transition: opacity var(--dur) var(--ease-out), transform var(--dur) var(--ease-spring), background var(--dur-fast); }
+.apx-fab__sub:hover { background: var(--surface-3); color: var(--primary); }
+.apx-fab__trigger:checked ~ .apx-fab__subs .apx-fab__sub { opacity: 1; transform: scale(1) translateY(0); pointer-events: auto; }
+.apx-fab__trigger:checked ~ .apx-fab__subs .apx-fab__sub:nth-child(1) { transition-delay: .06s; }
+.apx-fab__trigger:checked ~ .apx-fab__subs .apx-fab__sub:nth-child(2) { transition-delay: .12s; }
+.apx-fab__trigger:checked ~ .apx-fab__subs .apx-fab__sub:nth-child(3) { transition-delay: .18s; }
+.apx-fab__trigger:checked ~ .apx-fab__subs .apx-fab__sub:nth-child(4) { transition-delay: .24s; }
+
+/* ---------- iOS 风格复选框（mono 自适应） ---------- */
+.apx-ios-check { --c-size: 26px; --c-color: var(--primary); --c-bg: var(--primary-soft); position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; font-size: var(--fs-sm); color: var(--text-muted); }
+.apx-ios-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-ios-check .cw { position: relative; width: var(--c-size); height: var(--c-size); border-radius: 8px; transition: transform var(--dur-fast) var(--ease-out); }
+.apx-ios-check .cb { position: absolute; inset: 0; border-radius: 8px; border: 2px solid var(--border-strong); background: var(--surface); transition: all var(--dur-fast) var(--ease-out); }
+.apx-ios-check .ci { position: absolute; inset: 0; margin: auto; width: 75%; height: 75%; color: var(--on-brand); transform: scale(0); transition: transform var(--dur-fast) var(--ease-out); }
+.apx-ios-check .cp { stroke-dasharray: 40; stroke-dashoffset: 40; transition: stroke-dashoffset .3s ease .08s; }
+.apx-ios-check input:checked + .cw .cb { background: var(--c-color); border-color: var(--c-color); }
+.apx-ios-check input:checked + .cw .ci { transform: scale(1); }
+.apx-ios-check input:checked + .cw .cp { stroke-dashoffset: 0; }
+.apx-ios-check:hover .cw { transform: scale(1.06); }
+.apx-ios-check:active .cw { transform: scale(0.95); }
+.apx-ios-check input:focus-visible + .cw .cb { box-shadow: 0 0 0 4px var(--c-bg); }
+.apx-ios-check input:checked + .cw { animation: apx-pop .3s var(--ease-spring); }
+@keyframes apx-pop { 0%,100% { transform: scale(1); } 50% { transform: scale(1.12); } }
+
+/* ---------- 拨杆开关（mono 自适应） ---------- */
+.apx-toggle { position: relative; display: inline-flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; font-size: var(--fs-sm); color: var(--text-muted); }
+.apx-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-toggle__track { width: 56px; height: 30px; border-radius: 99px; background: var(--surface-3); border: 1px solid var(--border); transition: background var(--dur), border-color var(--dur); display: flex; align-items: center; }
+.apx-toggle__thumb { width: 24px; height: 24px; margin: 0 3px; border-radius: 50%; background: var(--surface-solid); box-shadow: var(--shadow-1); transition: transform var(--dur) var(--ease-out); }
+.apx-toggle input:checked + .apx-toggle__track { background: var(--success); border-color: var(--success); }
+.apx-toggle input:checked + .apx-toggle__track .apx-toggle__thumb { transform: translateX(26px); }
+.apx-toggle:hover .apx-toggle__thumb { box-shadow: var(--shadow-2); }
+.apx-toggle input:focus-visible + .apx-toggle__track { box-shadow: 0 0 0 4px var(--primary-soft-2); }
+
+/* ---------- 勾选动画复选框（mono 自适应） ---------- */
+.apx-check-anim { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; user-select: none; font-size: var(--fs-sm); color: var(--text-muted); --accent: var(--primary); }
+.apx-check-anim input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-check-anim .ck { position: relative; width: 22px; height: 22px; }
+.apx-check-anim .ck::before { content: ""; position: absolute; top: -8px; left: -8px; width: 38px; height: 38px; border-radius: 50%; background: color-mix(in srgb, var(--accent) 12%, transparent); opacity: 0; transition: opacity var(--dur-fast); }
+.apx-check-anim svg { position: relative; width: 22px; height: 22px; fill: none; stroke: var(--text-faint); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: stroke var(--dur-fast); }
+.apx-check-anim svg path { stroke-dasharray: 60; stroke-dashoffset: 0; }
+.apx-check-anim:hover .ck::before { opacity: 1; }
+.apx-check-anim:hover svg { stroke: var(--accent); }
+.apx-check-anim input:checked + .ck svg { stroke: var(--accent); }
+.apx-check-anim input:checked + .ck svg path { stroke-dashoffset: 60; transition: stroke-dashoffset .3s linear; }
+
+/* ---------- 星标切换（收藏） ---------- */
+.apx-star { position: relative; display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none; font-size: var(--fs-sm); color: var(--text-muted); --star: var(--warning); }
+.apx-star input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-star svg { width: 24px; height: 24px; fill: var(--text-faint); transition: fill var(--dur), transform var(--dur); }
+.apx-star input:checked + svg { fill: var(--star); animation: apx-star-pop .5s; }
+@keyframes apx-star-pop { 0% { transform: rotate(0); } 25% { transform: rotate(25deg) scale(1.1); } 50% { transform: rotate(-20deg) scale(1.2); } 75% { transform: rotate(15deg); } 100% { transform: rotate(0); } }
+
+/* ---------- 铃声切换（设置·免打扰） ---------- */
+.apx-bell-toggle { --bell: var(--text-muted); position: relative; display: inline-flex; align-items: center; gap: 12px; cursor: pointer; user-select: none; font-size: var(--fs-sm); color: var(--text-muted); }
+.apx-bell-toggle input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-bell-toggle .bell-regular, .apx-bell-toggle .bell-solid { width: 26px; height: 26px; fill: none; stroke: var(--bell); stroke-width: 1.8; stroke-linecap: round; stroke-linejoin: round; transition: opacity var(--dur-fast); }
+.apx-bell-toggle .bell-solid { display: none; }
+.apx-bell-toggle input:checked ~ .bell-solid { display: block; animation: apx-bell .5s; }
+.apx-bell-toggle input:checked ~ .bell-regular { display: none; }
+@keyframes apx-bell { 0% { opacity: 0; } 25% { transform: rotate(25deg); } 50% { transform: rotate(-20deg) scale(1.2); } 75% { transform: rotate(15deg); } 100% { opacity: 1; } }
+
+/* ---------- 可见性选择器（滑杆高亮 · mono 自适应） ---------- */
+.apx-vis { --main: var(--primary); --total: 4; position: relative; display: flex; flex-direction: column; padding-left: 16px; }
+.apx-vis input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-vis .glider-container { position: absolute; left: 0; top: 0; bottom: 0; width: 3px; background: linear-gradient(180deg, transparent, color-mix(in srgb, var(--main) 40%, transparent), transparent); border-radius: 3px; }
+.apx-vis .glider { position: relative; height: calc(100% / var(--total)); width: 100%; background: var(--main); border-radius: 3px; transition: transform .45s var(--ease-spring); box-shadow: 0 0 10px color-mix(in srgb, var(--main) 55%, transparent); }
+.apx-vis input:nth-of-type(1):checked ~ .glider-container .glider { transform: translateY(0); }
+.apx-vis input:nth-of-type(2):checked ~ .glider-container .glider { transform: translateY(100%); }
+.apx-vis input:nth-of-type(3):checked ~ .glider-container .glider { transform: translateY(200%); }
+.apx-vis input:nth-of-type(4):checked ~ .glider-container .glider { transform: translateY(300%); }
+.apx-vis input:nth-of-type(5):checked ~ .glider-container .glider { transform: translateY(400%); }
+.apx-vis input:nth-of-type(6):checked ~ .glider-container .glider { transform: translateY(500%); }
+.apx-vis label { padding: 12px 14px; cursor: pointer; color: var(--text-muted); font-size: var(--fs-body); transition: color var(--dur-fast); display: flex; align-items: center; gap: 10px; }
+.apx-vis input:checked + label { color: var(--text-strong); font-weight: 600; }
+
+/* ---------- 勾选动画单选（Uiverse WhiteNervosa · 描边绘制） ---------- */
+.apx-radio-check { --ac: var(--primary); cursor: pointer; position: relative; display: inline-flex; align-items: center; gap: 8px; user-select: none; font-size: var(--fs-sm); color: var(--text); }
+.apx-radio-check input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-radio-check .ck { position: relative; width: 20px; height: 20px; flex: none; }
+.apx-radio-check .ck::before { content: ""; position: absolute; top: -12px; left: -12px; width: 44px; height: 44px; border-radius: 50%; background: color-mix(in srgb, var(--ac) 8%, transparent); opacity: 0; transition: opacity .2s ease; }
+.apx-radio-check svg { position: relative; fill: none; stroke: var(--text-faint); stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; transition: stroke .2s ease; }
+.apx-radio-check svg path { stroke-dasharray: 60; stroke-dashoffset: 0; }
+.apx-radio-check svg polyline { stroke-dasharray: 22; stroke-dashoffset: 66; }
+.apx-radio-check:hover .ck::before { opacity: 1; }
+.apx-radio-check:hover svg { stroke: var(--ac); }
+.apx-radio-check input:checked ~ svg { stroke: var(--ac); }
+.apx-radio-check input:checked ~ svg path { stroke-dashoffset: 60; transition: stroke-dashoffset .3s linear; }
+.apx-radio-check input:checked ~ svg polyline { stroke-dashoffset: 42; transition: stroke-dashoffset .2s linear .15s; }
+
+/* ---------- 网格点阵背景（Uiverse adamgiebl · mono 自适应） ---------- */
+.apx-grid-bg {
+  --grid: color-mix(in srgb, var(--text-faint) 16%, transparent);
+  background-color: var(--surface-2);
+  background-image:
+    linear-gradient(0deg, transparent 24%, var(--grid) 25%, var(--grid) 26%, transparent 27%, transparent 74%, var(--grid) 75%, var(--grid) 76%, transparent 77%, transparent),
+    linear-gradient(90deg, transparent 24%, var(--grid) 25%, var(--grid) 26%, transparent 27%, transparent 74%, var(--grid) 75%, var(--grid) 76%, transparent 77%, transparent);
+  background-size: 22px 22px;
+}
+
+/* ---------- 渐变 + 竖线遮罩（Uiverse kencode7 · mono 自适应） ---------- */
+.apx-line-hero {
+  position: relative; overflow: hidden; border-radius: var(--r-md);
+  background:
+    linear-gradient(to bottom, var(--surface) 0%, var(--surface) 45%, transparent 100%),
+    linear-gradient(120deg, color-mix(in srgb, var(--primary) 20%, transparent), color-mix(in srgb, var(--accent, var(--primary)) 20%, transparent));
+}
+.apx-line-hero::before {
+  content: ""; position: absolute; inset: 0;
+  background-image: linear-gradient(90deg, color-mix(in srgb, var(--on-brand) 12%, transparent) 1px, transparent 1px);
+  background-size: 46px 100%;
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, transparent 72%);
+  mask-image: linear-gradient(to bottom, #000 0%, transparent 72%);
+  pointer-events: none;
+}
+
+/* ---------- 方块交错加载（Uiverse satyamchaudharydev） ---------- */
+.apx-spinner-blocks { --size: 30px; --c1: var(--primary); --c2: var(--text-faint); width: calc(var(--size) * 2); height: calc(var(--size) * 2); position: relative; }
+.apx-spinner-blocks::before, .apx-spinner-blocks::after { box-sizing: border-box; content: ""; position: absolute; width: var(--size); height: var(--size); top: 50%; left: 50%; background: var(--c1); animation: apx-blocks-up 2.4s cubic-bezier(0, 0, 0.24, 1.21) infinite; }
+.apx-spinner-blocks::after { background: var(--c2); top: calc(50% - var(--size)); left: calc(50% - var(--size)); animation: apx-blocks-down 2.4s cubic-bezier(0, 0, 0.24, 1.21) infinite; }
+@keyframes apx-blocks-up { 0%, 100% { transform: none; } 25% { transform: translateX(-100%); } 50% { transform: translateX(-100%) translateY(-100%); } 75% { transform: translateY(-100%); } }
+@keyframes apx-blocks-down { 0%, 100% { transform: none; } 25% { transform: translateX(100%); } 50% { transform: translateX(100%) translateY(100%); } 75% { transform: translateY(100%); } }
+
+/* ---------- 全局加载遮罩（配合 .apx-spinner-blocks） ---------- */
+.apx-loading { position: fixed; inset: 0; z-index: 9999; display: none; align-items: center; justify-content: center; background: color-mix(in srgb, var(--bg) 60%, transparent); backdrop-filter: blur(3px); -webkit-backdrop-filter: blur(3px); }
+.apx-loading.is-on { display: flex; }
+
+/* =====================================================================
+   Uiverse 素材批次（uiverse素材.txt）· 全部作用域为 .apx-* 前缀
+   来源：mobinkakei / SelfMadeSystem / catraco×4 / Galahhad / vinodjangid07×2
+        / 00Kubi / boryanakrasteva / sahilxkhadka / Yaya12085 / AspenBranch
+   说明：原始素材大量使用裸 .container/.card/svg/circle 选择器，已统一改前缀避免污染现有布局。
+   ===================================================================== */
+
+/* 1. 锁开关（mobinkakei） */
+.apx-lock { position: relative; display: inline-flex; align-items: center; justify-content: center; width: 56px; height: 56px; border-radius: 50%; cursor: pointer; user-select: none; background: var(--danger, #ff5b5b); box-shadow: var(--shadow-2); transition: background .25s; -webkit-tap-highlight-color: transparent; }
+.apx-lock input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-lock svg { width: 30px; height: 30px; fill: none; }
+.apx-lock svg .bling { stroke: #fff; stroke-width: 2.5; stroke-linecap: round; stroke-dasharray: 3; stroke-dashoffset: 15; transition: all .3s ease; }
+.apx-lock svg .lock { stroke: #fff; stroke-width: 4; stroke-linejoin: round; stroke-linecap: round; stroke-dasharray: 36; transition: all .4s ease; }
+.apx-lock svg .lockb { fill: #fff; fill-rule: evenodd; clip-rule: evenodd; transform: rotate(8deg); transform-origin: 14px 20px; transition: all .2s ease; }
+.apx-lock:has(input:checked) { background: var(--success, #20cca5); }
+.apx-lock:has(input:checked) svg .bling { animation: apx-bling .3s linear forwards; animation-delay: .2s; }
+.apx-lock:has(input:checked) svg .lock { stroke-dasharray: 48; animation: apx-locked .3s linear forwards; }
+.apx-lock:has(input:checked) svg .lockb { transform: rotate(0); transform-origin: 14px 22px; }
+@keyframes apx-bling { 50% { stroke-dashoffset: 12; } 100% { stroke-dashoffset: 9; } }
+@keyframes apx-locked { 50% { transform: translateY(1px); } }
+
+/* 2. 爱心绘制（SelfMadeSystem · 用作“赞”） */
+.apx-love { position: relative; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; background: none; border: 0; padding: 0; color: inherit; font: inherit; }
+.apx-love input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-love svg { width: 22px; height: 22px; overflow: visible; }
+.apx-love svg .path { fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; transition: stroke-dasharray .5s ease, stroke-dashoffset .5s ease; stroke-dasharray: 100 9999; stroke-dashoffset: 100; }
+.apx-love:has(input:checked) svg .path, .apx-love.is-active svg .path { stroke-dasharray: 100 9999; stroke-dashoffset: 0; }
+.apx-love:has(input:checked), .apx-love.is-active { color: var(--danger); }
+
+/* 3. 书签（Galahhad · 用作“收藏”） */
+.apx-bookmark { --bm: var(--warning, gold); --bm-2: var(--text-faint); position: relative; display: inline-flex; align-items: center; gap: 6px; cursor: pointer; user-select: none; background: none; border: 0; padding: 0; color: inherit; font: inherit; }
+.apx-bookmark input { -webkit-appearance: none; appearance: none; display: none; }
+.apx-bookmark .apx-bookmark__icon { width: 22px; height: 22px; fill: var(--bm-2); stroke: none; cursor: pointer; transition: .2s; display: inline-flex; align-items: center; justify-content: center; position: relative; transform-origin: top; }
+.apx-bookmark .apx-bookmark__icon::after { content: ""; position: absolute; width: 7px; height: 7px; box-shadow: 0 22px 0 -3px var(--bm), 22px 0 0 -3px var(--bm), 0 -22px 0 -3px var(--bm), -22px 0 0 -3px var(--bm), -16px 16px 0 -3px var(--bm), -16px -16px 0 -3px var(--bm), 16px -16px 0 -3px var(--bm), 16px 16px 0 -3px var(--bm); border-radius: 50%; transform: scale(0); }
+.apx-bookmark .apx-bookmark__icon::before { content: ""; position: absolute; border-radius: 50%; border: 1px solid var(--bm); opacity: 0; }
+.apx-bookmark:hover .apx-bookmark__icon { fill: color-mix(in srgb, var(--bm-2) 60%, var(--bm)); }
+.apx-bookmark:has(input:checked) .apx-bookmark__icon, .apx-bookmark.is-active .apx-bookmark__icon { fill: var(--bm); animation: apx-bm .3s forwards; transition-delay: .3s; }
+.apx-bookmark:has(input:checked) .apx-bookmark__icon::after, .apx-bookmark.is-active .apx-bookmark__icon::after { animation: apx-bm-circles .3s cubic-bezier(.175,.885,.32,1.275) forwards; animation-delay: .3s; }
+.apx-bookmark:has(input:checked) .apx-bookmark__icon::before, .apx-bookmark.is-active .apx-bookmark__icon::before { animation: apx-bm-circle .3s cubic-bezier(.175,.885,.32,1.275) forwards; animation-delay: .3s; }
+.apx-bookmark:has(input:checked), .apx-bookmark.is-active { color: var(--bm); }
+@keyframes apx-bm { 50% { transform: scaleY(.6); } 100% { transform: scaleY(1); } }
+@keyframes apx-bm-circle { from { width: 0; height: 0; opacity: 0; } 90% { width: 28px; height: 28px; opacity: 1; } to { opacity: 0; } }
+@keyframes apx-bm-circles { from { transform: scale(0); } 40% { opacity: 1; } to { transform: scale(.8); opacity: 0; } }
+
+/* 4. 全屏展开/收起（catraco expand/compress） */
+.apx-expand { --c: var(--text-muted); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; cursor: pointer; user-select: none; color: var(--c); }
+.apx-expand input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-expand svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.apx-expand .expand, .apx-expand .compress { position: absolute; transition: opacity .3s; }
+.apx-expand .compress { display: none; }
+.apx-expand:has(input:checked) .expand { display: none; }
+.apx-expand:has(input:checked) .compress { display: block; animation: apx-pop-in .4s; }
+@keyframes apx-pop-in { 0% { opacity: 0; transform: scale(.6); } 100% { opacity: 1; transform: scale(1); } }
+
+/* 5. 麦克风静音（catraco microphone） */
+.apx-mic { --c: var(--text-muted); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; cursor: pointer; user-select: none; color: var(--c); }
+.apx-mic input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-mic svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.apx-mic .microphone-slash, .apx-mic .microphone { position: absolute; transition: opacity .25s; }
+.apx-mic .microphone { display: none; }
+.apx-mic:has(input:checked) .microphone-slash { display: none; }
+.apx-mic:has(input:checked) .microphone { display: block; color: var(--danger); }
+
+/* 6. 静音/有声（catraco mute/voice） */
+.apx-mute { --c: var(--text-muted); position: relative; display: inline-flex; align-items: center; justify-content: center; width: 34px; height: 34px; cursor: pointer; user-select: none; color: var(--c); }
+.apx-mute input { position: absolute; opacity: 0; width: 0; height: 0; }
+.apx-mute svg { width: 20px; height: 20px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.apx-mute .mute, .apx-mute .voice { position: absolute; transition: opacity .25s; }
+.apx-mute .voice { display: none; }
+.apx-mute:has(input:checked) .mute { display: none; }
+.apx-mute:has(input:checked) .voice { display: block; color: var(--success); }
+
+/* 7. 圆形扩展按钮（vinodjangid07 · 清空/操作） */
+.apx-btn-expand { display: inline-flex; align-items: center; justify-content: flex-start; width: 42px; height: 42px; border: none; border-radius: 50%; cursor: pointer; position: relative; overflow: hidden; transition-duration: .3s; box-shadow: var(--shadow-2); background: var(--danger, #ff4141); color: #fff; }
+.apx-btn-expand .sign { width: 100%; transition-duration: .3s; display: flex; align-items: center; justify-content: center; }
+.apx-btn-expand .sign svg { width: 18px; }
+.apx-btn-expand .sign svg path { fill: #fff; }
+.apx-btn-expand .text { position: absolute; right: 0; width: 0; opacity: 0; color: #fff; font-size: .95em; font-weight: 600; transition-duration: .3s; }
+.apx-btn-expand:hover { width: 120px; border-radius: 40px; }
+.apx-btn-expand:hover .sign { width: 30%; padding-left: 16px; }
+.apx-btn-expand:hover .text { opacity: 1; width: 70%; padding-right: 12px; text-align: left; }
+.apx-btn-expand:active { transform: translate(2px, 2px); }
+.apx-btn-expand--ghost { background: var(--surface-3); color: var(--text); }
+.apx-btn-expand--ghost .sign svg path { fill: var(--text); }
+.apx-btn-expand--ghost .text { color: var(--text); }
+
+/* 8. 蜂巢加载（boryanakrasteva） */
+.apx-honeycomb { --hc: var(--primary); height: 26px; position: relative; width: 26px; }
+.apx-honeycomb div { animation: apx-honeycomb 2.1s infinite backwards; background: var(--hc); height: 13px; margin-top: 6px; position: absolute; width: 26px; }
+.apx-honeycomb div:after, .apx-honeycomb div:before { content: ''; border-left: 13px solid transparent; border-right: 13px solid transparent; position: absolute; left: 0; right: 0; }
+.apx-honeycomb div:after { top: -6px; border-bottom: 6px solid var(--hc); }
+.apx-honeycomb div:before { bottom: -6px; border-top: 6px solid var(--hc); }
+.apx-honeycomb div:nth-child(1){animation-delay:0s;left:-30px;top:0}
+.apx-honeycomb div:nth-child(2){animation-delay:.1s;left:-15px;top:24px}
+.apx-honeycomb div:nth-child(3){animation-delay:.2s;left:15px;top:24px}
+.apx-honeycomb div:nth-child(4){animation-delay:.3s;left:30px;top:0}
+.apx-honeycomb div:nth-child(5){animation-delay:.4s;left:15px;top:-24px}
+.apx-honeycomb div:nth-child(6){animation-delay:.5s;left:-15px;top:-24px}
+.apx-honeycomb div:nth-child(7){animation-delay:.6s;left:0;top:0}
+@keyframes apx-honeycomb { 0%,20%,80%,100%{opacity:0;transform:scale(0)} 30%,70%{opacity:1;transform:scale(1)} }
+
+/* 9. 骨架屏（sahilxkhadka · 转写自 Tailwind） */
+.apx-skeleton { animation: apx-pulse 1.4s ease-in-out infinite; }
+@keyframes apx-pulse { 0%,100%{opacity:1} 50%{opacity:.45} }
+.apx-skel { display: flex; gap: 12px; padding: 14px 16px; align-items: flex-start; }
+.apx-skel__avatar { width: 44px; height: 44px; border-radius: 50%; background: var(--surface-3); flex: none; }
+.apx-skel__body { flex: 1; display: flex; flex-direction: column; gap: 8px; }
+.apx-skel__line { height: 12px; border-radius: 6px; background: var(--surface-3); }
+.apx-skel__line.w-3-5 { width: 60%; }
+.apx-skel__line.w-9 { width: 92%; }
+.apx-skel__line.w-1-2 { width: 50%; }
+.apx-feed__loader { display: flex; justify-content: center; padding: 18px; }
+
+/* 10. Cookie 同意（00Kubi） */
+.apx-cookie { position: fixed; left: 16px; bottom: 16px; z-index: 9000; width: 300px; max-width: calc(100vw - 32px); background: var(--surface-solid, #fff); border-radius: 12px; display: flex; flex-direction: column; align-items: center; padding: 20px 22px; gap: 12px; box-shadow: var(--shadow-3); border: 1px solid var(--glass-border); }
+.apx-cookie[hidden] { display: none; }
+.apx-cookie__svg { width: 46px; }
+.apx-cookie__svg path { fill: var(--text-muted); }
+.apx-cookie__heading { font-size: 1.05em; font-weight: 800; color: var(--text-strong); }
+.apx-cookie__desc { text-align: center; font-size: .8em; font-weight: 600; color: var(--text-muted); line-height: 1.5; }
+.apx-cookie__desc a { color: var(--primary); text-decoration: none; }
+.apx-cookie__desc a:hover { text-decoration: underline; }
+.apx-cookie__actions { display: flex; gap: 12px; }
+.apx-cookie__accept { height: 34px; padding: 0 18px; border: none; border-radius: 20px; background: var(--primary); color: var(--on-brand); font-weight: 600; cursor: pointer; transition: filter .2s; box-shadow: 0 4px 10px -2px color-mix(in srgb, var(--primary) 50%, transparent); }
+.apx-cookie__accept:hover { filter: brightness(1.06); }
+.apx-cookie__decline { height: 34px; padding: 0 18px; border: none; border-radius: 20px; background: var(--surface-3); color: var(--text-strong); font-weight: 600; cursor: pointer; transition: background .2s; }
+.apx-cookie__decline:hover { background: var(--surface-4, #ebebeb); }
+
+/* 11. 上传拖拽区（Yaya12085 · 转写） */
+.apx-dropzone { position: relative; border: 2px dashed var(--border-strong); border-radius: var(--r-md); padding: 22px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px; cursor: pointer; background: var(--surface-2); transition: background .2s, border-color .2s; text-align: center; }
+.apx-dropzone:hover, .apx-dropzone.is-drag { border-color: var(--primary); background: color-mix(in srgb, var(--primary) 8%, var(--surface-2)); }
+.apx-dropzone__icon { width: 44px; height: 44px; color: var(--primary); }
+.apx-dropzone__icon svg { width: 100%; height: 100%; fill: none; stroke: currentColor; stroke-width: 1.6; stroke-linecap: round; stroke-linejoin: round; }
+.apx-dropzone__text { font-size: .85em; color: var(--text-muted); font-weight: 600; }
+.apx-dropzone input[type=file] { display: none; }
+
+/* 12. 斜纹背景（AspenBranch · 工具类） */
+.apx-stripes { background: repeating-linear-gradient(45deg, color-mix(in srgb, var(--primary) 22%, transparent), color-mix(in srgb, var(--primary) 22%, transparent) 20px, color-mix(in srgb, var(--accent, var(--primary)) 14%, transparent) 20px, color-mix(in srgb, var(--accent, var(--primary)) 14%, transparent) 40px); }

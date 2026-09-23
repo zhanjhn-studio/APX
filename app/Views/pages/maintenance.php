@@ -17,6 +17,7 @@ $slogan = SiteSettingsService::get('site_slogan', null) ?: Config::get('app.slog
 <body class="apx-auth-wrap">
   <div class="apx-auth__glow" aria-hidden="true"></div>
   <main class="apx-auth__form" style="max-width:520px;margin:auto;">
+    <div class="apx-stripes" aria-hidden="true" style="height:10px;border-radius:10px;margin-bottom:16px;opacity:.7;"></div>
     <div class="apx-card apx-card--glass apx-anim-pop" style="text-align:center;padding:36px 28px;">
       <div class="apx-auth__logo" style="justify-content:center;"><?= View::partial('logo') ?></div>
       <h1 style="font-size:var(--fs-h1);margin:14px 0 8px;"><?= e($siteName) ?></h1>

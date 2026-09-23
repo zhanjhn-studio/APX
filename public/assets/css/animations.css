@@ -31,9 +31,9 @@
 /* spinner */
 @keyframes apx-spin { to { transform: rotate(360deg); } }
 
-/* full page enter: subtle fade + rise */
+/* full page enter: subtle fade + rise（短促，减少跳转动画） */
 @keyframes apx-page-in {
-  from { opacity: 0; transform: translateY(8px); }
+  from { opacity: 0; transform: translateY(6px); }
   to   { opacity: 1; transform: translateY(0); }
 }
 /* 主内容区进入过渡（打开页面时的过渡动画） */
@@ -68,6 +68,15 @@
   width: 15px; height: 15px; border-radius: 50%;
   border: 2px solid rgba(255,255,255,0.5); border-top-color: #fff;
   animation: apx-spin 0.7s linear infinite;
+}
+
+/* View Transitions：局部视图交换（nav.js 触发）时的交叉淡入 */
+@media (prefers-reduced-motion: no-preference) {
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 220ms;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  }
 }
 
 /* 尊重“减少动效”偏好 */

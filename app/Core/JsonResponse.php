@@ -28,14 +28,25 @@ class JsonResponse
         $http = $code === 0 ? 200 : ($code >= 400 && $code < 600 ? $code : 400);
         http_response_code($http);
         header('Content-Type: application/json; charset=utf-8');
+        // 服务端把 i18n key 翻成可读文案，避免任何客户端漏翻译时把裸 key（如 auth.login.empty / validation.username）暴露给用户
         $out = [
             'code'    => $code,
-            'message' => $message,
+            'message' => I18n::translate($message),
             'data'    => $data,
-            'errors'  => $errors,
+            'errors'  => self::translateErrors($errors),
             'csrf'    => Csrf::token(),
         ];
         echo json_encode($out, JSON_UNESCAPED_UNICODE | JSON_INVALID_UTF8_IGNORE);
         exit;
+    }
+
+    /** errors 字段的值可能也是 i18n key，统一翻译为可读文案 */
+    private static function translateErrors(array $errors): array
+    {
+        $out = [];
+        foreach ($errors as $k => $v) {
+            $out[$k] = is_string($v) ? I18n::translate($v) : $v;
+        }
+        return $out;
     }
 }

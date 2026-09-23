@@ -29,4 +29,16 @@ class HomeController
             'css'          => ['css/pages/home.css', 'css/pages/post.css'],
         ], 'app');
     }
+
+    /**
+     * 独立发布页：富文本撰写 + 可见性 / 选项 / 收藏，复用统一图标与黑白设计令牌。
+     */
+    public function compose(): void
+    {
+        $user = AuthService::user() ?: [];
+        echo View::render('publish/index', [
+            'user' => $user,
+            'css'  => ['css/pages/publish.css'],
+        ], 'app');
+    }
 }

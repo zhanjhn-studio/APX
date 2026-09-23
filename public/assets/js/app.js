@@ -56,7 +56,7 @@ function init() {
   const boot = document.getElementById('apx-boot');
   if (boot) {
     boot.classList.add('apx-boot--hide');
-    setTimeout(() => boot.remove(), 520);
+    setTimeout(() => boot.remove(), 340);
   }
 
   i18n.init(window.APX_I18N || {});

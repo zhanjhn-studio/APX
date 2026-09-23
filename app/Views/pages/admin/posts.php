@@ -50,7 +50,7 @@ $state = $state ?? '';
           <td>
             <div class="apx-flex apx-gap-2">
               <a class="apx-icon-btn" href="<?= e(route('/post/' . (int) $p['id'])) ?>" target="_blank" title="<?= e(__('profile.view_profile')) ?>">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M2 12s3.6-7 10-7 10 7 10 7-3.6 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+                <?= icon('eye', 18) ?>
               </a>
               <?php if ($p['deleted_at'] === null): ?>
                 <button class="apx-btn apx-btn--danger apx-btn--sm" data-post-action="remove" data-post="<?= (int) $p['id'] ?>"><?= e(__('post.delete')) ?></button>

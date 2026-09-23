@@ -72,9 +72,9 @@ $conversations = $conversations ?? [];
         <div class="apx-thread__typing" id="apx-thread-typing" hidden></div>
       </div>
       <button class="apx-icon-btn" id="apx-thread-search" title="<?= e(__('messages.search_in')) ?>">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="m21 21-4.3-4.3"/></svg>
+        <?= icon('search', 20) ?>
       </button>
-      <button class="apx-icon-btn" id="apx-thread-info" title="<?= e(__('messages.thread_info')) ?>"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="9"/><path d="M12 16v-4M12 8h.01"/></svg></button>
+      <button class="apx-icon-btn" id="apx-thread-info" title="<?= e(__('messages.thread_info')) ?>"><?= icon('info', 20) ?></button>
     </div>
 
     <div class="apx-thread__search" id="apx-thread-searchbar" hidden>
@@ -88,21 +88,31 @@ $conversations = $conversations ?? [];
     <div class="apx-reply-bar" id="apx-reply-bar" hidden>
       <span class="apx-reply-bar__label"><?= e(__('messages.replying_to')) ?></span>
       <span class="apx-reply-bar__text" id="apx-reply-text"></span>
-      <button class="apx-icon-btn" id="apx-reply-cancel" title="<?= e(__('messages.cancel_reply')) ?>">✕</button>
+      <button class="apx-icon-btn" id="apx-reply-cancel" title="<?= e(__('messages.cancel_reply')) ?>"><?= icon('close', 18) ?></button>
     </div>
 
     <div class="apx-thread__compose" id="apx-thread-compose" hidden>
       <div class="apx-thread__tools">
         <button class="apx-icon-btn" id="apx-emoji-btn" title="<?= e(__('messages.emoji')) ?>">😊</button>
         <button class="apx-icon-btn" id="apx-image-btn" title="<?= e(__('messages.attach_image')) ?>">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="4" width="18" height="16" rx="2"/><circle cx="9" cy="10" r="1.6"/><path d="m4 18 5-5 4 4 3-3 4 4"/></svg>
+          <?= icon('image', 20) ?>
         </button>
         <button class="apx-icon-btn" id="apx-file-btn" title="<?= e(__('messages.attach_file')) ?>">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 12.5 12.5 21a5 5 0 0 1-7-7l8-8a3.5 3.5 0 0 1 5 5l-8 8a2 2 0 0 1-3-3l7-7"/></svg>
+          <?= icon('paperclip', 20) ?>
         </button>
         <button class="apx-icon-btn" id="apx-loc-btn" title="<?= e(__('messages.location')) ?>">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-6.5-7-11a7 7 0 0 1 14 0c0 4.5-7 11-7 11Z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <?= icon('location', 20) ?>
         </button>
+        <label class="apx-mic" title="<?= e(__('messages.mic')) ?>">
+          <input type="checkbox" id="apx-mic">
+          <svg class="microphone-slash" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/><path d="M4 4l16 16" stroke="currentColor" stroke-width="2"/></svg>
+          <svg class="microphone" viewBox="0 0 24 24"><path d="M12 2a3 3 0 0 1 3 3v6a3 3 0 0 1-6 0"/><path d="M5 11a7 7 0 0 0 14 0M12 18v3"/></svg>
+        </label>
+        <label class="apx-mute" title="<?= e(__('messages.mute')) ?>">
+          <input type="checkbox" id="apx-mute">
+          <svg class="mute" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4Z"/><path d="M17 9l4 6M21 9l-4 6" stroke="currentColor" stroke-width="2"/></svg>
+          <svg class="voice" viewBox="0 0 24 24"><path d="M4 9v6h4l5 5V4L8 9H4Z"/><path d="M16 8a5 5 0 0 1 0 8M19 5a9 9 0 0 1 0 14"/></svg>
+        </label>
         <select class="apx-input" id="apx-burn" style="height:34px;width:auto;">
           <option value="none"><?= e(__('messages.burn_off')) ?></option>
           <option value="after_view"><?= e(__('messages.burn_view')) ?></option>
@@ -124,3 +134,26 @@ $conversations = $conversations ?? [];
 </div>
 
 <script type="module" src="<?= asset('js/modules/chat.js') ?>"></script>
+<script>
+  (function () {
+    var mic = document.getElementById('apx-mic');
+    var mute = document.getElementById('apx-mute');
+    var rec = null, stream = null;
+    if (mic) mic.addEventListener('change', async function () {
+      if (mic.checked) {
+        try {
+          stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+          var MR = window.MediaRecorder; if (MR) { rec = new MR(stream); rec.start(); }
+          document.body.classList.add('apx-recording');
+        } catch (e) { /* 无权限则仅切换视觉态 */ }
+      } else {
+        try { if (rec && rec.state !== 'inactive') rec.stop(); } catch (e) {}
+        if (stream) { stream.getTracks().forEach(function (t) { t.stop(); }); stream = null; }
+        document.body.classList.remove('apx-recording');
+      }
+    });
+    if (mute) mute.addEventListener('change', function () {
+      document.body.classList.toggle('apx-muted', mute.checked);
+    });
+  })();
+</script>

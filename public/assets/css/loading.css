@@ -9,7 +9,7 @@
   width: 44px; height: 44px;
   position: relative;
   transform-style: preserve-3d;
-  animation: apx-spin-3d 2s infinite ease;
+  animation: apx-spin-3d 1.3s infinite ease;
 }
 .apx-spinner-3d > div {
   position: absolute; inset: 0;
@@ -101,10 +101,12 @@
   display: flex; align-items: center; justify-content: center;
   background:
     radial-gradient(120% 120% at 50% 0%, color-mix(in srgb, var(--brand-1, #6366F1) 16%, var(--bg, #0E1116)) 0%, var(--bg, #0E1116) 62%);
-  transition: opacity .45s var(--ease-out, ease), visibility .45s;
-  animation: apx-boot-fallback 6s forwards;
+  transition: opacity .3s var(--ease-out, ease), visibility .3s;
+  animation: apx-boot-fallback 3s forwards;
+  will-change: opacity;
 }
-.apx-boot--hide { opacity: 0; visibility: hidden; pointer-events: none; }
+/* JS 就绪后立刻隐藏：取消 fallback 动画，让 transition 立即接管（否则 6s 动画会压制 opacity 过渡） */
+.apx-boot--hide { opacity: 0; visibility: hidden; pointer-events: none; animation: none; }
 .apx-boot__inner { display: flex; flex-direction: column; align-items: center; gap: 18px; }
 .apx-boot__brand {
   font-size: 20px; font-weight: 700; letter-spacing: .5px;

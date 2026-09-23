@@ -28,6 +28,17 @@ class MailService
         return self::smtpSend($cfg, $to, $subject, $bodyHtml, $bodyText);
     }
 
+    /** 异步投递：交由队列 worker 发送（Redis 不可用时自动同步发送）。 */
+    public static function queue(string $to, string $subject, string $bodyHtml, string $bodyText = ''): void
+    {
+        QueueService::push('mail', [
+            'to'      => $to,
+            'subject' => $subject,
+            'html'    => $bodyHtml,
+            'text'    => $bodyText,
+        ]);
+    }
+
     private static function smtpSend(array $cfg, string $to, string $subject, string $html, string $text): bool
     {
         $host = $cfg['host'];

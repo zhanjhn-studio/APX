@@ -1,20 +1,26 @@
 # APX
 
-以「人与人的社交关系」为核心的现代社交平台。取消公共聊天室，关系驱动内容流。纯 PHP 8 自研 MVC，零 Composer 依赖，原生 ES Module 前端，可内网离线运行。
+以「人与人的社交关系」为核心的现代社交平台。取消公共聊天室，关系驱动内容流。PHP 8.1+ 自研 MVC + 适度 Composer 依赖（Predis / Monolog / Ratchet，均提供缺失时回退实现），原生 ES Module 前端，可内网离线运行（vendor 随包或安装期 composer install）。
 
 ## 技术栈
 
-- **后端**：PHP 8.0 自研 MVC（无框架），PDO 预处理，零 Composer 依赖；SMTP 用 `fsockopen` 自实现
+- **后端**：PHP 8.1+ 自研 MVC（无框架），PDO 预处理；引入必要 Composer 依赖（`predis/predis` 纯 PHP Redis 客户端、`monolog/monolog`、`cboden/ratchet` WebSocket），均缺省自动回退到自研实现（无 Redis 时用文件缓存、SSE 文件队列，不依赖任何扩展）；SMTP 用 `fsockopen` 自实现
 - **数据库**：MySQL 5.7 兼容（兼容 8.0 / MariaDB 10.x），InnoDB + `utf8mb4_unicode_ci`
 - **前端**：原生 ES Module，零构建零 CDN；PHP SSR 首屏 + AJAX 局部增强
-- **实时**：SSE 推送 + 5 秒轮询回退（Service 层抽象推送接口，预留 WebSocket）
+- **实时**：WebSocket（Ratchet 常驻进程 + Redis pub/sub，连接鉴权与心跳）为主通道，SSE 推送 + 轮询回退；前端 `realtime.js` 优先 WS 并自动降级
+- **队列**：Redis list + `blpop` 的异步队列（`bin/worker.php` 常驻消费），将邮件发送、缩略图生成等重活移出请求链路；无 Redis 时同步回退
+- **基础设施**：Redis 统一承载缓存 / 实时 / 队列三大场景（`config/app.php` 的 `cache_driver` / `realtime_driver` 可切换，缺 Redis 自动回退）
 - **安全**：评分制 WAF（观察 / 防御模式可在线切换）、外链二次确认守护、GD 图形验证码、CSRF 双通道、登录限流、TOTP 两步验证、设备信任与会话纪元失效
 
 ## 目录结构
 
 ```
+composer.json        Composer 依赖与 PSR-4 自动加载（App\ → app/）
+vendor/              Composer 产物（随包或安装期 composer install 生成；缺失则自动回退自研实现）
+bin/                 ws-server.php（WebSocket 常驻进程）/ worker.php（队列 worker 常驻进程）
 public/            前端控制器、安装向导、静态资源（assets/css、assets/js、assets/uploads）
-app/Core/          Router / Request / View / Database / Session / Csrf / Validator / Cache / Logger / LinkRenderer / I18n / Theme / WafService
+app/Core/          Router / Request / View / Database / Session / Csrf / Validator / Cache / Logger /
+                   LinkRenderer / I18n / Theme / WafService / Redis（Predis 封装，可切换缓存驱动）
 app/Middleware/    SecureHeaders / Waf / Locale / Theme / RateLimit / Auth / Guest / Admin / Permission / Csrf
 app/Controllers/   Auth / Home / Post / Topic / Favorite / Follow / Friends / Message / Notifications /
                    Discover / Search / Profile / Settings / Group / Report / Upload / Captcha / Events / Admin
@@ -22,12 +28,14 @@ app/Models/        一表一模型
 app/Interfaces/    RealtimeInterface / NotifierInterface / StorageInterface（推送与存储契约，便于替换实现）
 app/Services/      Auth / Waf / Captcha / LinkGuard / Upload / Mail / Totp / Relation / Message / Post / Group /
                    Favorite / Topic / Notification / Search / Profile / Report / Settings / SiteSettings /
-                   Device / Achievement / Admin / Migration / Update / Permission / Realtime
+                   Device / Achievement / Admin / Migration / Update / Permission / Realtime /
+                   Queue（异步队列）/ RedisRealtime（WS+Redis 实现）/ RealtimeTicket（WS 一次性票据）
 app/Views/         layouts / partials / pages
-config/            app / database.example / security / mail / upload
-database/          schema.sql（57 表）/ seed.sql / waf_rules.sql / migrations/（增量迁移）
+config/            app / database.example / security / mail / upload / redis.example
+database/          schema.sql（57 表）/ seed.sql / waf_rules.sql / migrations/（增量迁移，v2 含 FULLTEXT 索引）
 lang/              zh-CN / zh-TW / en（三语 key 完全对齐）
-scripts/           install.sh / release.sh / update.sh
+scripts/           install.sh / setup.sh / release.sh / update.sh / migrate-v1-v2.php（v1→v2 迁移向导）
+systemd/           apx-ws.service / apx-worker.service（WebSocket 与队列常驻进程单元）
 storage/           uploads / logs / cache（更新保护，禁止执行 PHP）
 ```
 
@@ -152,24 +160,37 @@ bash scripts/release.sh 1.1.0 "修复若干体验问题"
 - **P4 群组与设置**：群组双形态（群聊 + 群动态，含公告、禁言、三级角色、申请审批、邀请、退出解散）、个人主页等级/徽章/成就、设置中心（TOTP + 备份码、设备信任与远程下线、屏蔽词、屏蔽用户、黑名单、免打扰、账号注销冷静期）
 - **P5 后台与治理**：RBAC 角色权限矩阵、用户/内容/群组/黑名单管理、举报全链路、数据统计与趋势、管理员操作日志与登录日志、WAF 面板（模式切换/筛选/封禁）、主题语言管理、站点设置（含全站公告与维护模式在线开关）、基于 GitHub tag 的更新系统（下载 + 迁移 + 备份回滚）、Nginx / 脚本部署配套
 
-## 实时通道
+## v2 升级说明
 
-`app/Interfaces/RealtimeInterface.php` 定义推送契约，当前由 `app/Services/RealtimeService.php`（按用户定长文件队列）实现：
+v2 在保持「零框架自研 MVC、关系驱动社交」内核的前提下，补齐实时性与工程化短板：用 Redis 统一缓存 / 实时 / 队列，用 WebSocket 实现真正双向实时，用异步队列剥离重活，并对 UI 做苹果化与 View Transitions 局部视图交换。
 
-- `/api/events`（SSE）持续下发队列事件，闲置时 25 秒心跳，5 分钟自动重连；
-- `/api/events/poll` 每 5 秒轮询，返回增量事件与未读计数；
-- 业务侧只需 `RealtimeService::push($userId, $event, $payload)`（`NotificationService` 与 `MessageService` 已接入）。
+- **破坏性变更可接受**，但提供 **v1 → v2 迁移向导**，且保留全部存量数据。
+- 全新安装：按上文「一行脚本部署」即可；`scripts/setup.sh` 会自动安装 Redis、运行 `composer install` 并启用 `apx-ws` / `apx-worker` systemd 单元（含 Nginx `/ws` 反代）。
+- 已有 v1 站点升级（两种方式，均幂等且执行前自动备份）：
+  - 浏览器访问 `install.php`，在「升级到 v2」面板点击升级；或
+  - 服务器执行 `php scripts/migrate-v1-v2.php`（推荐，含交互确认）。
+- 缺 Redis / 未运行 `composer install` 时，缓存自动回退文件实现、实时回退 SSE、队列同步执行——**整站不依赖 Redis 亦可运行**，只是失去 WS 双向实时与异步队列的收益。
 
-前端 `public/assets/js/realtime.js` 统一渲染徽标与提示，并广播 `window` 事件 `apx:realtime`（聊天页据此即时同步新消息）。
-接入 WebSocket / Redis 时只需替换 `RealtimeService`，业务层无需改动。
+## 实时通道与队列
+
+`app/Interfaces/RealtimeInterface.php` 定义推送契约。`app/Services/Realtime.php` 按 `config/app.php` 的 `realtime_driver`（`ws` / `sse`）选择实现：
+
+- **WebSocket（默认 ws）**：`bin/ws-server.php`（Ratchet 常驻进程）校验一次性票据后绑定用户连接，订阅 Redis 频道转发事件；含 30 秒心跳、连接级在线态查询。由 `systemd/apx-ws.service` 托管。
+- **SSE 回退**：`/api/events`（SSE）持续下发队列事件，闲置时心跳，前端自动重连；`/api/events/poll` 轮询返回增量与未读计数。
+- 业务侧只需 `Realtime::push($userId, $event, $payload)`（`NotificationService` 与 `MessageService` 已接入），无需关心底层是 WS 还是 SSE；Redis 不可用时自动回退文件队列。
+
+异步队列：`app/Services/QueueService.php` 以 Redis list + `blpop` 派发任务，`bin/worker.php` 常驻消费（邮件发送、缩略图生成等）。无 Redis 时 `queue()` 同步回退。
+
+前端 `public/assets/js/realtime.js` 优先建立 WebSocket，失败自动降级 SSE/轮询，统一渲染徽标与提示，并广播 `window` 事件 `apx:realtime`；`public/assets/js/nav.js` 用 View Transitions 做局部视图交换，减少整页跳转动画。
 
 ## 开发约定
 
-- 文件首行必须为 `declare(strict_types=1)`；禁用 PHP 8.1 特性（`enum` / `readonly` / `never`）与 MySQL 5.7 不支持的语法。
+- 文件首行必须为 `declare(strict_types=1)`；禁用 MySQL 5.7 不支持的语法（CTE / 窗口函数 / `JSON` 列类型 / `ALTER ... RENAME COLUMN`）。PHP 8.1+ 语法（`enum` / `readonly` / `never`）已放开。
+- 引入第三方依赖（Composer）必须保证**缺省可回退**：任何 `class_exists` / `is_file(vendor/autoload.php)` 未命中时，自动降级到自研实现，绝不因缺 Redis / 缺 vendor 导致整站 500。
 - 所有输出走 `e()` 转义，URL 走 `route()`，文案走 `__()` / `trans_choice()`；新增文案必须同步 `zh-CN` / `zh-TW` / `en` 三份。
 - 业务规则、权限三重校验、事务、通知与日志下沉到 Service；Controller 只取参与组织响应。
-- 上传必须 MIME + 扩展名双校验、GD 重建、随机文件名、realpath 前缀比对。
-- 管理员治理动作必须写 `admin_logs`；日志禁止记录密码、令牌与完整请求体。
+- 上传必须 MIME + 扩展名双校验、GD 重建、随机文件名、realpath 前缀比对（WS 鉴权与队列任务同样遵循既有安全清单）。
+- 管理员治理动作必须写 `admin_logs`；日志禁止记录密码、令牌与完整请求体（Monolog 替换简单 Logger 后依旧遵循）。
 
 ## 常见问题排查
 

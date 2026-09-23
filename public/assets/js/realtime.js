@@ -1,12 +1,15 @@
-// APX · Realtime (SSE with polling fallback). 事件源来自 RealtimeInterface 实现，
-// 前端只负责把增量渲染到徽标与提示，并通过 CustomEvent('apx:realtime') 暴露给页面模块。
+// APX · Realtime（WebSocket 优先，SSE + 轮询回退）
+// 事件源来自 RealtimeInterface 实现；前端只负责把增量渲染到徽标与提示，
+// 并通过 CustomEvent('apx:realtime') 暴露给页面模块。
 import { get } from './core/http.js';
-import { on, emit } from './core/store.js';
+import { emit } from './core/store.js';
 import { toast } from './core/toast.js';
 
 let es = null;
 let pollTimer = null;
+let ws = null;
 let started = false;
+let wsTried = false;
 let lastCounts = { notifications: 0, messages: 0 };
 
 function handleEvent(name, payload) {
@@ -38,6 +41,56 @@ function tr(body) {
   return Object.prototype.hasOwnProperty.call(dict, key) ? dict[key] : key;
 }
 
+function setBadge(id, n) {
+  const el = document.getElementById(id);
+  if (!el) return;
+  if (n > 0) { el.textContent = n > 99 ? '99+' : String(n); el.style.display = ''; }
+  else { el.style.display = 'none'; }
+}
+
+function updateBadges(counts) {
+  lastCounts.notifications = counts.notifications || 0;
+  lastCounts.messages = counts.messages || 0;
+  setBadge('apx-noti-count', lastCounts.notifications);
+  setBadge('apx-msg-count', lastCounts.messages);
+  setBadge('apx-msg-count-m', lastCounts.messages);
+}
+
+// ---------------- WebSocket（优先） ----------------
+
+function buildWsUrl(base) {
+  if (base) return base;
+  const proto = location.protocol === 'https:' ? 'wss://' : 'ws://';
+  return proto + location.host + '/ws';
+}
+
+function connectWS() {
+  if (wsTried) return connectSSE();
+  wsTried = true;
+  get('/api/realtime/ticket')
+    .then((json) => {
+      const token = json && json.data ? json.data.token : '';
+      if (!token) return connectSSE();
+      const url = buildWsUrl(json.data.ws) + '?token=' + encodeURIComponent(token);
+      ws = new WebSocket(url);
+      ws.onmessage = (e) => {
+        try {
+          const data = JSON.parse(e.data);
+          if (!data) return;
+          if (data.type === 'heartbeat' || data.type === 'pong') return;
+          if (data.event) {
+            handleEvent(data.event, data.payload || {});
+          }
+        } catch (err) { /* ignore */ }
+      };
+      ws.onclose = () => { ws = null; connectSSE(); };
+      ws.onerror = () => { try { ws.close(); } catch (e) {} };
+    })
+    .catch(() => connectSSE());
+}
+
+// ---------------- SSE / 轮询（回退） ----------------
+
 function connectSSE() {
   if (typeof EventSource === 'undefined') return startPolling();
   try {
@@ -66,28 +119,14 @@ function startPolling() {
   }, 5000);
 }
 
-function setBadge(id, n) {
-  const el = document.getElementById(id);
-  if (!el) return;
-  if (n > 0) { el.textContent = n > 99 ? '99+' : String(n); el.style.display = ''; }
-  else { el.style.display = 'none'; }
-}
-
-function updateBadges(counts) {
-  lastCounts.notifications = counts.notifications || 0;
-  lastCounts.messages = counts.messages || 0;
-  setBadge('apx-noti-count', lastCounts.notifications);
-  setBadge('apx-msg-count', lastCounts.messages);
-  setBadge('apx-msg-count-m', lastCounts.messages);
-}
-
 export function start() {
   if (started) return;
   started = true;
-  connectSSE();
+  connectWS();
 }
 
 export function stop() {
+  if (ws) { try { ws.close(); } catch (e) {} ws = null; }
   if (es) { es.close(); es = null; }
   if (pollTimer) { clearInterval(pollTimer); pollTimer = null; }
   started = false;

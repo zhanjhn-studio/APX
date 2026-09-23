@@ -28,7 +28,7 @@ return [
         $f = __DIR__ . '/../VERSION';
         return is_file($f) ? (trim(@file_get_contents($f)) ?: '1.0.0') : '1.0.0';
     })(),
-    'update_repo'     => 'zhanjhn-studio/ATX',
+    'update_repo'     => 'zhanjhn-studio/APX',
     'update_channel'  => 'tags',        // tags | releases
     'update_branch'   => 'main',
     'update_manifest_url' => '',        // 留空则按 update_repo@update_branch/manifest.json 自动拼接
@@ -36,4 +36,24 @@ return [
     'uploads_dir'     => __DIR__ . '/../storage/uploads',
     'logs_dir'        => __DIR__ . '/../storage/logs',
     'cache_dir'       => __DIR__ . '/../storage/cache',
+    // v2 缓存驱动：redis（需 Predis + Redis 服务）| file（默认零依赖，Redis 不可用时自动回退）
+    'cache_driver'    => 'file',
+    // v2 实时驱动：ws（WebSocket + Redis）| sse（文件队列回退）
+    'realtime_driver' => 'sse',
+    // v2 WebSocket 服务（bin/ws-server.php，由 systemd/supervisor 托管）
+    'websocket'       => [
+        'host' => '0.0.0.0',
+        'port' => 8080,
+        // 前端 WS 地址；留空则按 location 自动推断（经 Nginx /ws 反代），也可填 ws://host:8080
+        'url'  => '',
+    ],
+    // v2 异步队列（Redis list + blpop worker）
+    'queue' => [
+        // true 时上传缩略图改由 worker 异步生成（接口返回时 thumb 暂缺，由 worker 稍后补全）
+        'thumbnail_async' => false,
+    ],
+    // v2 搜索
+    'search' => [
+        'cache_ttl' => 60, // 热点搜索/联想结果缓存秒数（Redis，无 Redis 时自动回退文件缓存）
+    ],
 ];

@@ -213,11 +213,12 @@ $themes = ['mono','minimal','graphite','graphite_pro','dark','light','blue','pur
         <div class="apx-card__title"><?= e(__('settings.dnd')) ?></div>
         <div class="apx-card__hint"><?= e(__('settings.dnd_hint')) ?></div>
         <div class="apx-dnd">
-          <label class="apx-switch">
+          <label class="apx-bell-toggle">
             <input type="checkbox" id="apx-dnd-enabled" <?= !empty($dnd['enabled']) ? 'checked' : '' ?>>
-            <span></span>
+            <svg class="bell-regular" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 8 3 9H3s3-3 3-9"/><path d="M10 20a2 2 0 0 0 4 0"/></svg>
+            <svg class="bell-solid" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"><path d="M6 9a6 6 0 0 1 12 0c0 6 2 8 3 9H3s3-3 3-9"/><path d="M10 20a2 2 0 0 0 4 0"/><path d="M3 3l18 18"/></svg>
+            <span class="apx-dnd__text"><?= e(__('settings.dnd_enable')) ?></span>
           </label>
-          <span><?= e(__('settings.dnd_enable')) ?></span>
         </div>
         <div class="apx-dnd-range">
           <label><?= e(__('settings.dnd_start')) ?><input class="apx-input" type="time" id="apx-dnd-start" value="<?= e($dnd['start']) ?>"></label>

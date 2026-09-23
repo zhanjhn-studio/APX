@@ -32,8 +32,11 @@ class AuthController
         $password = (string) $req->post('password', '');
         $remember = (bool) $req->post('remember');
 
-        if ($login === '' || $password === '') {
-            JsonResponse::fail(422, 'auth.login.empty', []);
+        if ($login === '') {
+            JsonResponse::fail(422, 'auth.login.username_empty', []);
+        }
+        if ($password === '') {
+            JsonResponse::fail(422, 'auth.login.password_empty', []);
         }
 
         $user = AuthService::authenticate($login, $password);
@@ -170,7 +173,7 @@ class AuthController
                 'created_at' => now_utc(),
             ]);
             $link = rtrim(\App\Core\Config::get('app.base_url') ?: '', '/') . '/verify-email/' . $token;
-            MailService::send($data['email'], __('mail.verify.subject'), '<p>' . __('mail.verify.body', [':link' => $link]) . '</p>', __('mail.verify.body', [':link' => $link]));
+            MailService::queue($data['email'], __('mail.verify.subject'), '<p>' . __('mail.verify.body', [':link' => $link]) . '</p>', __('mail.verify.body', [':link' => $link]));
         }
 
         AuthService::login($userId, false);
@@ -207,7 +210,7 @@ class AuthController
                 'created_at' => now_utc(),
             ]);
             $link = rtrim(\App\Core\Config::get('app.base_url') ?: '', '/') . '/reset-password/' . $token;
-            MailService::send($user['email'], __('mail.reset.subject'), '<p>' . __('mail.reset.body', [':link' => $link]) . '</p>', __('mail.reset.body', [':link' => $link]));
+            MailService::queue($user['email'], __('mail.reset.subject'), '<p>' . __('mail.reset.body', [':link' => $link]) . '</p>', __('mail.reset.body', [':link' => $link]));
         }
         // 不泄露邮箱是否存在
         JsonResponse::ok([], 'auth.forgot.sent');

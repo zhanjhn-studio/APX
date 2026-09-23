@@ -1,5 +1,4 @@
 // APX · HTTP layer — unified JSON, auto CSRF, toast on error, 401 redirect.
-const JSON_HEADERS = { 'Accept': 'application/json', 'Content-Type': 'application/x-www-form-urlencoded' };
 
 function csrfToken() {
   const m = document.querySelector('meta[name="csrf-token"]');
@@ -64,10 +63,19 @@ window.route = route;
 
 export async function request(method, url, data, opts = {}) {
   url = routeUrl(url);
-  const headers = { ...JSON_HEADERS };
+  const headers = { 'Accept': 'application/json' };
   if (method !== 'GET') headers['X-CSRF-Token'] = csrfToken();
   const init = { method, headers, credentials: 'same-origin' };
-  if (method !== 'GET') init.body = data instanceof FormData ? data : buildBody(data);
+  if (method !== 'GET') {
+    if (data instanceof FormData) {
+      // 关键：FormData 不能强制 Content-Type，否则浏览器不会补 multipart boundary，
+      // 导致 PHP 收到 urlencoded 头却解析 multipart 体，$_POST 为空（登录报“未输入密码”）。
+      init.body = data;
+    } else {
+      headers['Content-Type'] = 'application/x-www-form-urlencoded';
+      init.body = buildBody(data);
+    }
+  }
 
   const res = await fetch(url, init);
   let json;

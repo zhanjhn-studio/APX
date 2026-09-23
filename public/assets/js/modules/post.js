@@ -1,6 +1,7 @@
 // post.js —— 首页动态流：渲染、发布（含媒体/可见性）、无限滚动
 import { get, post } from '../core/http.js';
 import { t } from '../core/i18n.js';
+import { toast } from '../core/toast.js';
 import { renderPost, bindGlobal } from './postcard.js';
 
 const base = window.APX.base;
@@ -33,18 +34,43 @@ function init() {
   };
   appendPosts(initial);
 
+  let loaderEl = null;
+  function showLoader() {
+    if (!loaderEl) {
+      loaderEl = document.createElement('div');
+      loaderEl.className = 'apx-feed__loader';
+      loaderEl.innerHTML = '<div class="apx-honeycomb"><div></div><div></div><div></div><div></div><div></div><div></div><div></div></div>';
+    }
+    if (!loaderEl.parentNode) feed.appendChild(loaderEl);
+  }
+  function hideLoader() { if (loaderEl && loaderEl.parentNode) loaderEl.remove(); }
+
+  function showSkeleton(n) {
+    const frag = document.createDocumentFragment();
+    for (let i = 0; i < n; i++) {
+      const sk = document.createElement('div');
+      sk.className = 'apx-card apx-skel apx-skeleton';
+      sk.innerHTML = '<div class="apx-skel__avatar"></div><div class="apx-skel__body"><div class="apx-skel__line w-3-5"></div><div class="apx-skel__line w-9"></div><div class="apx-skel__line w-1-2"></div></div>';
+      frag.appendChild(sk);
+    }
+    feed.appendChild(frag);
+  }
+  function clearSkeleton() { feed.querySelectorAll('.apx-skel').forEach((x) => x.remove()); }
+
   const loadMore = async () => {
     if (loading || !hasMore) return;
     loading = true;
+    showSkeleton(3); showLoader();
     try {
       const j = await get('/api/feed?before=' + oldest);
+      clearSkeleton(); hideLoader();
       if (j && j.code === 0) {
         appendPosts(j.data.posts || []);
         hasMore = !!j.data.has_more;
       } else {
         hasMore = false;
       }
-    } catch (e) { hasMore = false; }
+    } catch (e) { clearSkeleton(); hideLoader(); hasMore = false; }
     loading = false;
   };
 
@@ -87,9 +113,9 @@ function initComposer() {
         if (r.code === 0 && r.data.items) {
           r.data.items.forEach((it) => { media.push(it); renderPreview(); });
         } else {
-          alert(t('upload.failed'));
+          toast.error(t('upload.failed'));
         }
-      } catch (e) { alert(t('upload.failed')); }
+      } catch (e) { toast.error(t('upload.failed')); }
       btn.disabled = false;
     });
   });
@@ -126,7 +152,7 @@ function initComposer() {
       }
       if (j.data.redirect) { /* stay on feed */ }
     } else {
-      alert((j && j.message) ? j.message : t('post.create_failed'));
+      toast.error((j && j.message) ? j.message : t('post.create_failed'));
     }
   };
   btn.addEventListener('click', send);

@@ -24,6 +24,6 @@
 .apx-user-row__actions { display: flex; gap: 8px; flex-shrink: 0; }
 
 .apx-pill { display: inline-flex; align-items: center; font-size: 11px; padding: 2px 8px; border-radius: var(--r-pill); background: var(--primary-soft); color: var(--primary-text); }
-.apx-pill--special { background: linear-gradient(135deg, var(--brand-2), var(--brand-3)); color: #fff; }
+.apx-pill--special { background: linear-gradient(135deg, var(--brand-2), var(--brand-3)); color: var(--on-brand); }
 
 .apx-requests-empty, .apx-friends-empty { text-align: center; color: var(--text-faint); padding: 48px 0; }

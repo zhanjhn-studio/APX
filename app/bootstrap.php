@@ -7,6 +7,11 @@ declare(strict_types=1);
 define('APP_ROOT', dirname(__DIR__));
 define('APP_START', microtime(true));
 
+// Composer 依赖（v2 起引入）。vendor/ 缺失时自动回退到自研实现，保证内网/离线可运行。
+if (is_file(APP_ROOT . '/vendor/autoload.php')) {
+    require_once APP_ROOT . '/vendor/autoload.php';
+}
+
 // 静态资源直通：所有 /assets/*（兼容 /public/assets/*）统一从 public/assets/ 流式返回。
 // 这样无论 web 根指向 public/ 还是项目根、是否配置服务器别名/rewrite，CSS/JS/图片都不会 404。
 $__apxUri = parse_url((string) ($_SERVER['REQUEST_URI'] ?? '/'), PHP_URL_PATH) ?: '/';

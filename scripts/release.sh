@@ -43,6 +43,14 @@ DIST="apx-$NEW_VER"
 TMP="$(mktemp -d)"
 echo "• 构建分发包 $DIST ..."
 
+# 安装依赖，随包发布 vendor/ 以支持离线 / 内网部署（缺 composer 则跳过，安装期亦可 composer install）
+if command -v composer >/dev/null 2>&1; then
+  echo "• composer install --no-dev ..."
+  COMPOSER_ALLOW_SUPERUSER=1 composer install --no-dev --no-interaction 2>&1 | tail -3 || echo "  (composer install 失败，分发包将不含 vendor/)"
+else
+  echo "• 未找到 composer，分发包不含 vendor/（部署时运行 composer install 亦可）"
+fi
+
 if command -v rsync >/dev/null 2>&1; then
   rsync -a --exclude='.git' --exclude='storage/uploads/*' --exclude='storage/logs/*' \
     --exclude='storage/cache/*' --exclude='config/database.php' --exclude='node_modules' \

@@ -81,18 +81,24 @@ class UploadService implements StorageInterface
         }
         self::saveImage($src, $path, $mime);
 
-        // 缩略图 400x400 等比
-        $tw = 400;
-        $th = 400;
-        $ratio = min($tw / $w, $th / $h);
-        $cw = (int) round($w * $ratio);
-        $ch = (int) round($h * $ratio);
-        $thumb = imagecreatetruecolor($cw, $ch);
-        imagecopyresampled($thumb, $src, 0, 0, 0, 0, $cw, $ch, $w, $h);
         $thumbName = 'th_' . $name;
-        self::saveImage($thumb, $dir . '/' . $thumbName, 'image/jpeg');
-        imagedestroy($src);
-        imagedestroy($thumb);
+        if (!empty(Config::get('queue.thumbnail_async'))) {
+            // 异步：投递缩略图生成任务，worker 稍后补全；接口返回时 thumb 暂缺
+            QueueService::push('thumbnail', ['path' => self::rel($path)]);
+            imagedestroy($src);
+        } else {
+            // 缩略图 400x400 等比
+            $tw = 400;
+            $th = 400;
+            $ratio = min($tw / $w, $th / $h);
+            $cw = (int) round($w * $ratio);
+            $ch = (int) round($h * $ratio);
+            $thumb = imagecreatetruecolor($cw, $ch);
+            imagecopyresampled($thumb, $src, 0, 0, 0, 0, $cw, $ch, $w, $h);
+            self::saveImage($thumb, $dir . '/' . $thumbName, 'image/jpeg');
+            imagedestroy($src);
+            imagedestroy($thumb);
+        }
 
         return [
             'type' => 'image',
@@ -147,6 +153,50 @@ class UploadService implements StorageInterface
     {
         $base = rtrim(APP_ROOT, '/') . '/public/assets/uploads/';
         return ltrim(str_replace('\\', '/', substr($abs, strlen($base))), '/');
+    }
+
+    /**
+     * 后台异步生成缩略图（供队列 worker 调用）。入参为相对 uploads 的路径。
+     * 成功返回缩略图相对路径，失败返回 null；不会删除原图。
+     */
+    public static function generateThumbnail(string $rel): ?string
+    {
+        $base = realpath(APP_ROOT . '/public/assets/uploads');
+        if ($base === false) {
+            return null;
+        }
+        $rel = ltrim(str_replace('\\', '/', $rel), '/');
+        if ($rel === '' || strpos($rel, '..') !== false) {
+            return null;
+        }
+        $abs = realpath($base . '/' . $rel);
+        if ($abs === false
+            || strncmp($abs, $base . DIRECTORY_SEPARATOR, strlen($base . DIRECTORY_SEPARATOR)) !== 0
+            || !is_file($abs)) {
+            return null;
+        }
+        $mime = (new \finfo(FILEINFO_MIME_TYPE))->file($abs);
+        if (!in_array($mime, self::IMAGE_TYPES, true)) {
+            return null;
+        }
+        $src = self::loadImage($abs, $mime);
+        if (!$src) {
+            return null;
+        }
+        $w = imagesx($src);
+        $h = imagesy($src);
+        $tw = 400;
+        $th = 400;
+        $ratio = min($tw / $w, $th / $h);
+        $cw = (int) round($w * $ratio);
+        $ch = (int) round($h * $ratio);
+        $thumb = imagecreatetruecolor($cw, $ch);
+        imagecopyresampled($thumb, $src, 0, 0, 0, 0, $cw, $ch, $w, $h);
+        $thumbName = 'th_' . basename($abs);
+        self::saveImage($thumb, dirname($abs) . '/' . $thumbName, 'image/jpeg');
+        imagedestroy($src);
+        imagedestroy($thumb);
+        return self::rel(dirname($abs) . '/' . $thumbName);
     }
 
     /**

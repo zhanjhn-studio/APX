@@ -111,8 +111,9 @@ function originHtml(p) {
 /* ---------------- 操作栏 ---------------- */
 function actionsHtml(p) {
   return `<div class="apx-post__actions">
-    <button class="apx-post__action${p.liked ? ' is-active' : ''}" data-act="like" data-post="${p.id}">
-      <svg viewBox="0 0 24 24" fill="${p.liked ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="M12 21s-7-4.5-9.5-9C1 9 2.5 5.5 6 5.5c2 0 3.2 1.2 4 2.5.8-1.3 2-2.5 4-2.5 3.5 0 5 3.5 3.5 6.5C19 16.5 12 21 12 21Z"/></svg>
+    <button class="apx-post__action apx-love${p.liked ? ' is-active' : ''}" data-act="like" data-post="${p.id}" title="${attr(t('post.like'))}">
+      <input type="checkbox" ${p.liked ? 'checked' : ''}>
+      <svg viewBox="0 0 24 24"><path class="path" pathLength="100" d="M12 21s-7-4.5-9.5-9C1 9 2.5 5.5 6 5.5c2 0 3.2 1.2 4 2.5.8-1.3 2-2.5 4-2.5 3.5 0 5 3.5 3.5 6.5C19 16.5 12 21 12 21Z"/></svg>
       <span class="cnt">${p.like_count | 0}</span>
     </button>
     <button class="apx-post__action" data-act="comment" data-post="${p.id}">
@@ -123,8 +124,9 @@ function actionsHtml(p) {
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 12v7a1 1 0 0 0 1 1h14a1 1 0 0 0 1-1v-7"/><path d="M12 3v13M8 7l4-4 4 4"/></svg>
       <span class="cnt">${p.share_count | 0}</span>
     </button>
-    <button class="apx-post__action${p.favorited ? ' is-active' : ''}" data-act="favorite" data-post="${p.id}">
-      <svg viewBox="0 0 24 24" fill="${p.favorited ? 'currentColor' : 'none'}" stroke="currentColor" stroke-width="2"><path d="m12 3 2.7 5.5 6 .9-4.3 4.2 1 6-5.4-2.8L6.6 19.6l1-6L3.3 9.4l6-.9Z"/></svg>
+    <button class="apx-post__action apx-bookmark${p.favorited ? ' is-active' : ''}" data-act="favorite" data-post="${p.id}" title="${attr(t('post.favorite'))}">
+      <input type="checkbox" ${p.favorited ? 'checked' : ''}>
+      <svg class="apx-bookmark__icon" viewBox="0 0 24 24"><path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z"/></svg>
       <span class="cnt">${p.favorite_count | 0}</span>
     </button>
   </div>`;
@@ -272,6 +274,7 @@ async function onClick(e) {
       const svg = tgt.querySelector('svg');
       if (svg) svg.setAttribute('fill', j.data.liked ? 'currentColor' : 'none');
       tgt.classList.toggle('is-active', !!j.data.liked);
+      const cb = tgt.querySelector('input'); if (cb) cb.checked = !!j.data.liked;
       tgt.querySelector('.cnt').textContent = j.data.count;
     }
   } else if (act === 'favorite') {
@@ -282,6 +285,7 @@ async function onClick(e) {
       const svg = tgt.querySelector('svg');
       if (svg) svg.setAttribute('fill', j.data.favorited ? 'currentColor' : 'none');
       tgt.classList.toggle('is-active', !!j.data.favorited);
+      const cb = tgt.querySelector('input'); if (cb) cb.checked = !!j.data.favorited;
       tgt.querySelector('.cnt').textContent = j.data.count;
       document.dispatchEvent(new CustomEvent('apx:favorite', { detail: { postId: id, favorited: !!j.data.favorited } }));
     }

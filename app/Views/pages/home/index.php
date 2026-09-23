@@ -22,11 +22,11 @@ $unread = (int) ($unread ?? 0);
         <div class="apx-flex apx-justify-between apx-mt-2">
           <div class="apx-composer__tools">
             <label class="apx-icon-btn" title="<?= e(__('post.add_image')) ?>">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-5-5L5 21"/></svg>
+              <?= icon('image', 20) ?>
               <input type="file" accept="image/*" multiple hidden data-upload="image">
             </label>
             <label class="apx-icon-btn" title="<?= e(__('post.add_video')) ?>">
-              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m10 9 5 3-5 3Z"/></svg>
+              <?= icon('video', 20) ?>
               <input type="file" accept="video/*" hidden data-upload="video">
             </label>
             <select class="apx-select" id="apx-composer-vis" title="<?= e(__('post.visibility')) ?>">

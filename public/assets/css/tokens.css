@@ -11,10 +11,10 @@
   --brand-1: #6366F1;
   --brand-2: #8B5CF6;
   --brand-3: #22D3EE;
-  --brand-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 55%, #22D3EE 120%);
-  --brand-glow-1: rgba(99, 102, 241, 0.35);
-  --brand-glow-2: rgba(139, 92, 246, 0.28);
-  --brand-glow-3: rgba(34, 211, 238, 0.22);
+  --brand-gradient: linear-gradient(135deg, #6366F1 0%, #8B5CF6 100%);
+  --brand-glow-1: rgba(99, 102, 241, 0.22);
+  --brand-glow-2: rgba(139, 92, 246, 0.18);
+  --brand-glow-3: rgba(34, 211, 238, 0.14);
 
   /* functional */
   --c-success: #34D399;
@@ -22,15 +22,16 @@
   --c-danger: #F87171;
   --c-info: #60A5FA;
 
-  /* motion */
+  /* motion —— 苹果化：快起快落，减少跳动 */
   --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
   --ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
-  --dur-fast: 0.16s;
-  --dur: 0.26s;
-  --dur-slow: 0.45s;
+  --ease-smooth: cubic-bezier(0.4, 0, 0.2, 1);
+  --dur-fast: 0.14s;
+  --dur: 0.22s;
+  --dur-slow: 0.30s;   /* 页面进入 / 卡片入场，已显著缩短以减少跳转动画 */
 
   /* radii */
-  --r-xs: 8px;
+  --r-xs: 10px;
   --r-sm: 12px;
   --r-md: 16px;
   --r-lg: 22px;
@@ -38,22 +39,25 @@
   --r-pill: 999px;
 
   /* type */
-  --font-sans: "PingFang SC", "Microsoft YaHei", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
-  --fs-display: 30px;
-  --fs-h1: 24px;
-  --fs-h2: 19px;
+  --font-sans: -apple-system, BlinkMacSystemFont, "SF Pro Text", "SF Pro Display", "PingFang SC", "Microsoft YaHei", "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans SC", sans-serif;
+  --fs-hero: 56px;
+  --fs-display: 42px;
+  --fs-h1: 28px;
+  --fs-h2: 20px;
   --fs-sub: 17px;
-  --fs-body: 14px;
+  --fs-body: 14.5px;
   --fs-sm: 13px;
   --fs-xs: 12px;
+  --tracking-tight: -0.02em;
+  --tracking-tighter: -0.035em;
 }
 
 /* ---- Layer 1: semantic tokens, dark mode (default) ---- */
 [data-apx-mode="dark"] {
   --bg: #0E1116;
   --bg-2: #0A0D11;
-  --bg-grad: radial-gradient(1200px 600px at 12% -8%, rgba(99,102,241,0.16), transparent 60%),
-             radial-gradient(1000px 520px at 100% 0%, rgba(34,211,238,0.10), transparent 55%);
+  --bg-grad: radial-gradient(1200px 600px at 12% -8%, rgba(99,102,241,0.12), transparent 60%),
+             radial-gradient(1000px 520px at 100% 0%, rgba(34,211,238,0.06), transparent 55%);
   --surface: #151A21;
   --surface-2: #1B222C;
   --surface-3: #232C39;
@@ -81,8 +85,8 @@
 [data-apx-mode="light"] {
   --bg: #EEF1F8;
   --bg-2: #E4E9F2;
-  --bg-grad: radial-gradient(1200px 600px at 12% -8%, rgba(99,102,241,0.14), transparent 60%),
-             radial-gradient(1000px 520px at 100% 0%, rgba(34,211,238,0.10), transparent 55%);
+  --bg-grad: radial-gradient(1200px 600px at 12% -8%, rgba(99,102,241,0.10), transparent 60%),
+             radial-gradient(1000px 520px at 100% 0%, rgba(34,211,238,0.06), transparent 55%);
   --surface: #FFFFFF;
   --surface-2: #F5F7FB;
   --surface-3: #ECEFF6;

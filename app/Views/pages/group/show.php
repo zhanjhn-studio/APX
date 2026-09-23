@@ -129,7 +129,7 @@ $groupJson = [
               </div>
               <?php if ((int) $p['user_id'] === (int) (\App\Services\AuthService::userId() ?? 0) || !empty($perms['manage'])): ?>
                 <button class="apx-icon-btn apx-gpost__del" data-gpost-delete="<?= (int) $p['id'] ?>" title="<?= e(__('post.delete')) ?>">
-                  <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>
+                  <?= icon('trash', 18) ?>
                 </button>
               <?php endif; ?>
             </div>

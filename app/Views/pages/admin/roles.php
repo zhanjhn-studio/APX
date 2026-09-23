@@ -34,7 +34,7 @@ foreach ($permissions as $p) {
         </div>
         <?php if ((int) $r['is_system'] === 0): ?>
           <button class="apx-icon-btn" data-role-delete="<?= (int) $r['id'] ?>" title="<?= e(__('common.action.delete')) ?>">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 7h16M9 7V5h6v2M6 7l1 13h10l1-13"/></svg>
+            <?= icon('trash', 18) ?>
           </button>
         <?php endif; ?>
       </a>

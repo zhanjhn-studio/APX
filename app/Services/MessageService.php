@@ -200,7 +200,7 @@ class MessageService
         foreach ($others as $o) {
             $peerId = (int) $o['user_id'];
             // 实时增量（免打扰只静默通知，仍推送未读）
-            RealtimeService::push($peerId, 'message', [
+            Realtime::push($peerId, 'message', [
                 'conversation_id' => $conversationId,
                 'message_id'      => $id,
                 'sender_id'       => $senderId,

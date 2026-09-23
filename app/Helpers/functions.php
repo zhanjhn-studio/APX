@@ -50,6 +50,7 @@ if (!function_exists('route')) {
             'messages' => 'messages.php', 'friends' => 'friends.php',
             'notifications' => 'notifications.php', 'profile' => 'profile.php',
             'favorites' => 'favorites.php', 'settings' => 'settings.php',
+            'publish' => 'publish.php',
             'groups' => 'groups.php', 'group' => 'group.php',
             'post' => 'post.php', 'topic' => 'topic.php',
             'admin' => 'admin.php', 'admin/waf' => 'admin-waf.php', 'admin/update' => 'admin-update.php',
@@ -232,5 +233,19 @@ if (!function_exists('is_ajax')) {
     {
         return (isset($_SERVER['HTTP_X_REQUESTED_WITH']) && strtolower($_SERVER['HTTP_X_REQUESTED_WITH']) === 'xmlhttprequest')
             || (isset($_SERVER['HTTP_ACCEPT']) && strpos($_SERVER['HTTP_ACCEPT'], 'application/json') !== false);
+    }
+}
+
+if (!function_exists('icon')) {
+    /**
+     * 渲染统一图标（引用 icons.php 注入的 SVG sprite）。
+     * @param string $name  图标名（对应 #i-<name>）
+     * @param int    $size  像素尺寸，默认 20
+     * @param string $class 附加 class（如 'apx-ico--fill'）
+     */
+    function icon(string $name, int $size = 20, string $class = ''): string
+    {
+        $cls = 'apx-ico' . ($class !== '' ? ' ' . $class : '');
+        return '<svg class="' . e($cls) . '" width="' . $size . '" height="' . $size . '" aria-hidden="true" focusable="false"><use href="#i-' . e($name) . '"></use></svg>';
     }
 }

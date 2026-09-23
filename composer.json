@@ -1,0 +1,25 @@
+{
+    "name": "zhanjhn-studio/apx",
+    "description": "APX - 以人与人的社交关系为核心的现代社交平台（v2）",
+    "type": "project",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.1",
+        "predis/predis": "^2.0",
+        "monolog/monolog": "^3.0",
+        "cboden/ratchet": "^0.4",
+        "phpoffice/phpspreadsheet": "^3.0"
+    },
+    "autoload": {
+        "psr-4": {
+            "App\\": "app/"
+        }
+    },
+    "config": {
+        "optimize-autoloader": true,
+        "sort-packages": true,
+        "allow-plugins": {}
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true
+}

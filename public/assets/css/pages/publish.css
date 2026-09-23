@@ -1,0 +1,104 @@
+/* =====================================================================
+ * APX · 发布页（独立撰写动态）
+ * 复用全局组件库：可见性滑杆 / iOS 复选 / 拨杆 / 勾选动画 / 星标 / 铃声 等。
+ * ===================================================================== */
+
+.apx-publish {
+  --dot: color-mix(in srgb, var(--text-faint) 22%, transparent);
+  position: relative;
+  min-height: 100%;
+  background-image: radial-gradient(var(--dot) 1px, transparent 1px);
+  background-size: 22px 22px;
+  padding: 8px 0 40px;
+}
+
+.apx-publish__grid {
+  display: grid;
+  grid-template-columns: 1fr 320px;
+  gap: 18px;
+  align-items: start;
+}
+@media (max-width: 920px) {
+  .apx-publish__grid { grid-template-columns: 1fr; }
+}
+
+/* ---------- 撰写卡片 ---------- */
+.apx-compose {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--r-md);
+  box-shadow: var(--shadow-1);
+  padding: 18px;
+}
+.apx-compose__head { display: flex; align-items: center; gap: 12px; margin-bottom: 14px; }
+.apx-compose__hint { font-size: var(--fs-sm); color: var(--text-muted); }
+.apx-compose__textarea {
+  width: 100%; min-height: 150px; resize: vertical;
+  background: var(--surface-2); border: 1px solid var(--border); color: var(--text);
+  border-radius: var(--r-sm); padding: 14px; line-height: 1.6; font-size: var(--fs-body);
+  transition: border-color var(--dur-fast), box-shadow var(--dur-fast);
+}
+.apx-compose__textarea:focus { outline: none; border-color: var(--primary); box-shadow: 0 0 0 4px var(--primary-soft-2); }
+.apx-compose__tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.apx-compose__foot {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-top: 16px; gap: 12px; flex-wrap: wrap;
+}
+.apx-compose__count { font-size: var(--fs-xs); color: var(--text-faint); }
+
+/* ---------- 媒体预览 ---------- */
+.apx-compose__media { display: flex; flex-wrap: wrap; gap: 10px; margin-top: 12px; }
+.apx-media-preview {
+  position: relative; width: 96px; height: 96px; border-radius: var(--r-sm);
+  overflow: hidden; border: 1px solid var(--border); background: var(--surface-2);
+}
+.apx-media-preview img, .apx-media-preview video { width: 100%; height: 100%; object-fit: cover; display: block; }
+.apx-media-preview__x {
+  position: absolute; top: 4px; right: 4px; width: 22px; height: 22px; border: 0;
+  border-radius: 50%; background: rgba(0,0,0,.6); color: #fff; cursor: pointer; font-size: 13px; line-height: 1;
+}
+
+/* ---------- 侧栏卡片 ---------- */
+.apx-publish__side .apx-card + .apx-card { margin-top: 16px; }
+.apx-publish__sec-title { font-size: var(--fs-sm); font-weight: 600; color: var(--text-strong); margin-bottom: 6px; }
+.apx-publish__opt {
+  display: flex; align-items: center; justify-content: space-between; gap: 12px;
+  padding: 11px 0; border-bottom: 1px solid var(--border);
+}
+.apx-publish__opt:last-child { border-bottom: 0; padding-bottom: 0; }
+.apx-publish__opt-label { font-size: var(--fs-sm); color: var(--text); }
+
+/* ---------- 发布身份卡（andrew-demchenk0 风 · mono） ---------- */
+.apx-profile-card {
+  --bg: var(--surface); --main: var(--text-strong); --sub: var(--text-muted);
+  position: relative; border-radius: var(--r-md); background: var(--bg);
+  border: 1px solid var(--border); padding: 18px; display: flex; flex-direction: column; align-items: center; overflow: hidden;
+}
+.apx-profile-card__cover {
+  height: 60px; width: calc(100% + 36px); margin: -18px -18px 0;
+  background: var(--primary-grad);
+}
+.apx-profile-card__avatar {
+  width: 72px; height: 72px; border-radius: 50%; border: 3px solid var(--surface);
+  margin-top: -36px; background: var(--surface-3); color: var(--text-strong);
+  display: flex; align-items: center; justify-content: center; font-size: 28px; font-weight: 700;
+}
+.apx-profile-card__name { margin-top: 10px; font-weight: 600; color: var(--main); font-size: var(--fs-sub); }
+.apx-profile-card__sub { margin-top: 3px; font-size: var(--fs-sm); color: var(--sub); }
+.apx-profile-card__btn {
+  margin-top: 14px; width: 100%; height: 34px; border: 1px solid var(--border); border-radius: var(--r-xs);
+  background: var(--surface-2); color: var(--text); font-size: var(--fs-xs); font-weight: 700; cursor: pointer;
+  transition: background var(--dur-fast), color var(--dur-fast), border-color var(--dur-fast);
+}
+.apx-profile-card__btn:hover { background: var(--primary); color: var(--on-brand); border-color: var(--primary); }
+
+/* ---------- 发布页提示条 ---------- */
+.apx-publish__alerts { margin-bottom: 16px; display: grid; gap: 10px; }
+
+/* ---------- Hero 横幅（kencode7 渐变 + 竖线） ---------- */
+.apx-publish__hero { padding: 22px 24px; margin-bottom: 16px; }
+.apx-publish__hero-title { margin: 0; font-size: var(--fs-h2); color: var(--text-strong); letter-spacing: .5px; }
+.apx-publish__hero-sub { margin: 6px 0 0; font-size: var(--fs-sm); color: var(--text-muted); }
+
+/* ---------- 话题选择（WhiteNervosa 勾选动画） ---------- */
+.apx-topic-list { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
