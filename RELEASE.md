@@ -1,13 +1,13 @@
 # APX v2.0.0 发布说明
 
-> v2 在保持「零框架自研 MVC、关系驱动社交」内核的前提下，补齐实时性与工程化短板：Redis 统一基础设施、WebSocket 双向实时、异步队列，以及苹果化 UI 与 View Transitions 局部视图交换。破坏性变更可接受，但提供 v1 → v2 幂等迁移向导并保留全部存量数据。
+> v2 在保持「零框架自研 MVC、关系驱动社交」内核的前提下，补齐实时性与工程化短板：Redis 统一基础设施、WebSocket 双向实时、异步队列，以及现代化 UI（设计令牌与动效体系重写）与 View Transitions 局部视图交换。破坏性变更可接受，但提供 v1 → v2 幂等迁移向导并保留全部存量数据。
 
 ## 概述
 
 - **版本**：v2.0.0
 - **发布日期**：2026-09-19
 - **运行环境**：PHP 8.1+ / MySQL 5.7+ 或 MariaDB / Nginx（推荐）或 Apache；可选 Redis（缺省自动回退）
-- **代码规模**：约 57 张数据表、250+ 源文件；引入必要 Composer 依赖（predis/monolog/ratchet），均提供缺省回退
+- **代码规模**：约 57 张数据表、250+ 源文件；引入必要 Composer 依赖（predis/monolog/ratchet/phpspreadsheet），均提供缺省回退
 
 ## 核心特性
 
@@ -19,7 +19,7 @@
 - **WebSocket 实时**：`bin/ws-server.php` 常驻进程，连接票据鉴权 + 心跳；前端 `realtime.js` 优先 WS、SSE/轮询回退。
 - **异步队列**：Redis list + `blpop` 的 `QueueService` 与 `bin/worker.php`，将邮件发送、缩略图生成等重活移出请求链路；无 Redis 时同步回退。
 - **搜索与缓存优化**：MySQL FULLTEXT（ngram 中文分词）增强 + Redis 缓存热点搜索与联想建议，兼容 5.7。
-- **UI 现代化**：设计令牌与动效时长重写（苹果类、低跳动），`nav.js` 用 View Transitions 做局部视图交换，减少整页跳转动画；兼容 12 主题三档外观。
+- **UI 现代化**：设计令牌与动效时长重写（克制低跳动），`nav.js` 用 View Transitions 做局部视图交换，减少整页跳转动画；兼容 12 主题三档外观。
 - **自动更新系统**：`manifest.json` 记录最新版本与下载地址，后台「系统更新」或 `scripts/update.sh` 可一键检测并升级。
 - **定时清理**：`cron/cleanup.php` 处理过期缓存与临时数据。
 
@@ -54,7 +54,7 @@ ADMIN_USER=admin ADMIN_PASS='admin123' sudo -E bash scripts/setup.sh
 
 ## 下载
 
-- **分发包**：`apx-1.0.0.zip`（本 Release 附件，已剔除 `.git`、运行数据、`.codebuddy` 与敏感配置）。
+- **分发包**：`apx-2.0.0.zip`（本 Release 附件，已剔除 `.git`、运行数据、`.codebuddy` 与敏感配置）。
 - **更新源**：`manifest.json`（随 tag 入库，指向本 Release 的 zip）。
 
 ## 升级
@@ -99,6 +99,10 @@ apx/
 - `scripts/setup.sh` 编写环境为 Windows，未做完整 Linux 实测，首次在 Linux 上执行如遇问题请反馈。
 - 分发包已随附 `vendor/`（Composer 依赖）以支持离线 / 内网部署；不含 `.git`、`.codebuddy`、`config/database.php` 与 `storage/` 运行数据。若 `vendor/` 缺失，部署期运行 `composer install` 亦可。
 - 未安装 Redis 或未运行 `composer install` 时，缓存 / 实时 / 队列自动回退自研实现，整站仍可正常运行（仅失去 WebSocket 双向实时与异步队列收益）。
+
+## 后续路线（v3 预告）
+
+- **后台自定义前端 HTML / AI 提示词**：管理员可在后台自定义一段前端展示 HTML（全站渲染），并作为 AI 接口说明 / 提示词，交由 AI 生成并下发页面内容。本版本已完成规划，将在 v3 上线。
 
 ## 许可证
 
