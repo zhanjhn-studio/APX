@@ -8,6 +8,8 @@ use App\Core\Request;
 use App\Core\View;
 use App\Core\WafService;
 use App\Services\AdminService;
+use App\Services\CustomHtmlService;
+use App\Services\HtmlSanitizer;
 use App\Services\MigrationService;
 use App\Services\ReportService;
 use App\Services\SiteSettingsService;
@@ -293,6 +295,10 @@ class AdminController
     {
         $pairs = [];
         foreach (SiteSettingsService::WRITABLE as $key) {
+            // 自定义前端 HTML 由专用接口 customHtmlSave 处理（含净化），避免此处绕过 sanitizer 落库原始 HTML。
+            if (str_starts_with($key, 'custom_html_')) {
+                continue;
+            }
             $v = $req->post($key, null);
             if ($v === null) {
                 continue;
@@ -311,6 +317,48 @@ class AdminController
         $n = SiteSettingsService::setMany($pairs, 'general');
         AdminService::log('setting.save', 'setting', null, (string) $n);
         JsonResponse::ok(['saved' => $n], 'admin.setting.saved');
+    }
+
+    // ==================================================================
+    // 自定义前端 HTML（v3）：提示词工坊 + 全站前台注入
+    // ==================================================================
+
+    public function customHtml(): void
+    {
+        echo View::render('admin/custom_html', [
+            'settings'  => SiteSettingsService::all(),
+            'manifest'  => CustomHtmlService::INTERFACE_MANIFEST,
+            'prompt'    => CustomHtmlService::buildPrompt(
+                (string) (SiteSettingsService::get('custom_html_instruction', '') ?? ''),
+                (string) (SiteSettingsService::get('custom_html_interface', '') ?? '')
+            ),
+            'seg' => 'custom_html',
+        ], 'admin');
+    }
+
+    public function customHtmlSave(Request $req): void
+    {
+        $enabled = ((int) $req->post('custom_html_enabled', 0)) === 1 ? '1' : '0';
+        $position = (string) $req->post('custom_html_position', CustomHtmlService::DEFAULT_POSITION);
+        if (!in_array($position, ['before_content', 'after_content', 'both'], true)) {
+            $position = CustomHtmlService::DEFAULT_POSITION;
+        }
+        $instruction = mb_substr((string) $req->post('custom_html_instruction', ''), 0, 2000);
+        $interface = mb_substr((string) $req->post('custom_html_interface', ''), 0, 4000);
+        $rawHtml = (string) $req->post('custom_html_content', '');
+        // 保存时即净化：即使后台被绕过，落库的也是安全 HTML。
+        $content = HtmlSanitizer::clean($rawHtml);
+
+        $pairs = [
+            'custom_html_enabled'     => $enabled,
+            'custom_html_position'    => $position,
+            'custom_html_instruction' => $instruction,
+            'custom_html_interface'   => $interface,
+            'custom_html_content'     => $content,
+        ];
+        $n = SiteSettingsService::setMany($pairs, 'custom_page');
+        AdminService::log('custom_html.save', 'setting', null, (string) $n);
+        JsonResponse::ok(['saved' => $n], 'admin.custom_html.saved');
     }
 
     public function appearance(): void

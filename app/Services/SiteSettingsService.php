@@ -17,6 +17,8 @@ class SiteSettingsService
         'site_name', 'site_slogan', 'register_mode', 'allow_registration',
         'default_theme', 'default_mode', 'default_language', 'maintenance',
         'smtp_dev_mode', 'waf_mode', 'announcement',
+        'custom_html_enabled', 'custom_html_position', 'custom_html_content',
+        'custom_html_instruction', 'custom_html_interface',
     ];
 
     public static function all(): array
@@ -93,5 +95,10 @@ class SiteSettingsService
         'default_language' => 'i18n',
         'smtp_dev_mode' => 'mail',
         'waf_mode' => 'security',
+        'custom_html_enabled' => 'custom_page',
+        'custom_html_position' => 'custom_page',
+        'custom_html_content' => 'custom_page',
+        'custom_html_instruction' => 'custom_page',
+        'custom_html_interface' => 'custom_page',
     ];
 }

@@ -139,6 +139,8 @@ return [
     ['POST', '/admin/roles/delete',    'AdminController@roleDelete', ['auth', 'admin', ['permission', 'role.manage'], 'csrf']],
     ['GET',  '/admin/settings',        'AdminController@settings', ['auth', 'admin', ['permission', 'setting.manage']]],
     ['POST', '/admin/settings/save',   'AdminController@settingsSave', ['auth', 'admin', ['permission', 'setting.manage'], 'csrf']],
+    ['GET',  '/admin/custom-html',     'AdminController@customHtml', ['auth', 'admin', ['permission', 'setting.manage']]],
+    ['POST', '/admin/custom-html/save', 'AdminController@customHtmlSave', ['auth', 'admin', ['permission', 'setting.manage'], 'csrf']],
     ['GET',  '/admin/appearance',      'AdminController@appearance', ['auth', 'admin', ['permission', 'theme.manage']]],
     ['POST', '/admin/appearance/save', 'AdminController@appearanceSave', ['auth', 'admin', ['permission', 'theme.manage'], 'csrf']],
     ['GET',  '/admin/logs',            'AdminController@logs',     ['auth', 'admin', ['permission', 'admin.access']]],

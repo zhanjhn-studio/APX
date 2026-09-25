@@ -29,6 +29,7 @@ $nav = [
     ['roles',      'admin.nav.roles',      '/admin/roles',      'role.manage',   'shield-check'],
     ['appearance', 'admin.nav.appearance', '/admin/appearance', 'theme.manage',  'palette'],
     ['settings',   'admin.nav.settings',   '/admin/settings',   'setting.manage','settings'],
+    ['custom_html','admin.nav.custom_html', '/admin/custom-html', 'setting.manage','code'],
     ['logs',       'admin.nav.logs',       '/admin/logs',       'admin.access',  'inbox'],
     ['waf',        'admin.nav.waf',        '/admin/waf',        'waf.manage',    'shield'],
     ['update',     'admin.nav.update',     '/admin/update',     'update.manage', 'download'],

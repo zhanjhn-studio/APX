@@ -1,7 +1,7 @@
 {
-  "version": "2.0.0",
-  "released_at": "2026-09-19T12:00:00Z",
-  "notes": "v2：引入 Redis 统一缓存/实时/队列基础设施，新增 WebSocket 常驻进程（SSE/轮询回退），异步队列剥离邮件与缩略图重活，MySQL FULLTEXT 增强 + 热点搜索缓存，UI 苹果化与 View Transitions 局部视图交换；保留 v1 存量数据与幂等迁移向导。",
-  "download": "https://github.com/zhanjhn-studio/APX/releases/download/v2.0.0/apx-2.0.0.zip",
-  "migrations": ["2026_09_19_0001_add_fulltext_search.sql"]
+  "version": "3.0.0",
+  "released_at": "2026-09-25T12:00:00Z",
+  "notes": "v3：新增「自定义前端 HTML + AI 提示词工坊」。管理员在后台拼装提示词（平台接口说明 + 占位符清单 + 诉求），交由外部 AI 生成 HTML 片段，经白名单净化与占位符替换后注入全站前台；全程不调用任何 AI，零新增依赖、可离线、不泄露站点密钥。无需数据库迁移（复用 settings 表）。",
+  "download": "https://github.com/zhanjhn-studio/APX/releases/download/v3.0.0/apx-3.0.0.zip",
+  "migrations": []
 }

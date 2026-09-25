@@ -9,6 +9,13 @@
 .apx-topbar { grid-column: 1 / -1; }
 .apx-sidebar { grid-row: 2 / -1; border-right: 1px solid var(--border); background: var(--bg-2); padding: 22px 16px; overflow-y: auto; }
 .apx-main { grid-column: 2; grid-row: 2; overflow-y: auto; padding: 32px 32px 112px; }
+/* 自定义前端 HTML（v3）注入块 */
+.apx-custom-html { margin: 14px 0; }
+.apx-custom-html:first-child { margin-top: 0; }
+.apx-custom-list { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 6px; }
+.apx-custom-list li a { display: flex; flex-direction: column; gap: 2px; padding: 10px 12px; border-radius: var(--radius); background: var(--glass); text-decoration: none; color: var(--text); }
+.apx-custom-list__author { font-weight: 600; font-size: var(--fs-sm); }
+.apx-custom-list__text { color: var(--text-muted); font-size: var(--fs-sm); }
 .apx-aside { display: none; }
 
 /* ---------- Topbar (glass) ---------- */

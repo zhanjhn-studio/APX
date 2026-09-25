@@ -98,7 +98,21 @@ $initial = !empty($user['nickname']) ? mb_substr($user['nickname'], 0, 1) : (!em
     </script>
     <?php endif; ?>
 
+    <?php
+    $apxCustomBefore = \App\Services\CustomHtmlService::render('before');
+    if ($apxCustomBefore !== '') {
+        echo '<div class="apx-custom-html">' . $apxCustomBefore . '</div>';
+    }
+    ?>
+
     <?= $content ?? '' ?>
+
+    <?php
+    $apxCustomAfter = \App\Services\CustomHtmlService::render('after');
+    if ($apxCustomAfter !== '') {
+        echo '<div class="apx-custom-html">' . $apxCustomAfter . '</div>';
+    }
+    ?>
   </main>
 
   <nav class="apx-bottom-nav">

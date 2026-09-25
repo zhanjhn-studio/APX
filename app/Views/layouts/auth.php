@@ -31,7 +31,19 @@ $title = $title ?? I18n::translate('auth.login.title');
 
     <main class="apx-auth__form">
       <div class="apx-auth__card apx-glass apx-anim-pop">
+        <?php
+        $apxCustomBefore = \App\Services\CustomHtmlService::render('before');
+        if ($apxCustomBefore !== '') {
+            echo '<div class="apx-custom-html">' . $apxCustomBefore . '</div>';
+        }
+        ?>
         <?= $content ?? '' ?>
+        <?php
+        $apxCustomAfter = \App\Services\CustomHtmlService::render('after');
+        if ($apxCustomAfter !== '') {
+            echo '<div class="apx-custom-html">' . $apxCustomAfter . '</div>';
+        }
+        ?>
       </div>
     </main>
   </div>
